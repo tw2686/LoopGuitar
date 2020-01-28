@@ -4,6 +4,8 @@
 {% endblock %}
 {% block script %}
 <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/jquery.nstSlider.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename = 'jquery.nstSlider.js') }}"></script>
 {% endblock %}
 {% block videos %}
 var videos = {{videos|tojson}};
@@ -12,7 +14,7 @@ var vid_loops = {{vid_loops|tojson}};
 {% endblock %}
 {% block css %}
 .ranges{
-  color: #f6931f;
+  color: rgb(255, 255, 102);
   font-weight: bold;
   width: 50;
 }
@@ -28,24 +30,39 @@ var vid_loops = {{vid_loops|tojson}};
   position: relative;
   display: inline-block;
 }
-.lb-wrap .btn-circle{
+.lb-wrap .btn-delete{
   position: absolute;
   top: 4px;
   right: 4px;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   padding: 2px 2px 2px;
   line-height: 10px;
   border-radius: 15px;
   text-align: center;
   opacity: 0.5;
 }
-.btn-circle:hover{
+.btn-delete:hover{
+  opacity: 1;
+}
+.lb-wrap .btn-edit{
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 25px;
+  height: 25px;
+  padding: 2px 2px 2px;
+  line-height: 10px;
+  border-radius: 15px;
+  text-align: center;
+  opacity: 0.5;
+}
+.btn-edit:hover{
   opacity: 1;
 }
 .btn-xlarge {
-  width: 100px;
-  height: 100px;
+  width: 220px;
+  height: 80px;
   padding: 10px 10px;
   font-size: 22px;
   line=height: normal;
@@ -88,90 +105,211 @@ var vid_loops = {{vid_loops|tojson}};
 ion-icon {
   font-size: 28px;
 }
+.p_s {
+  margin: 0;
+}
+.subhead {
+  opacity: 0.5;
+  font-size: 15px;
+}
+#progress-bar .ui-slider-range {
+  /*background: #4285F4;*/
+  background: rgb(255, 255, 102);
+}
+#progress-bar .ui-slider-handle {
+  /*border-color: #4285F4;*/
+  border-color: rgb(255, 255, 102);
+}
+.nstSlider{
+  width: 100%;
+  height: 33px;
+  border-radius: 15px;
+  background: rgb(255, 255, 102, 0.3);
+  border: 2px solid rgb(255, 255, 102);
+}
+.nstSlider .bar{
+  height: 13px;
+  top: 30%;
+}
+.nstSlider .leftGrip,
+.nstSlider .rightGrip {
+  border-radius: 15px;
+  height: 30px;
+  width: 30px;
+}
+.nstSlider .leftGrip.gripHighlighted,
+.nstSlider .rightGrip.gripHighlighted {
+  background: #446778;
+}
+.nstSlider .highlightPanel{
+  background: #3CE0AF;
+  height: 30px;
+  border-radius: 15px;
+}
+#timecount, #speed, #looprangelabel{
+  color: white
+}
+.container {
+  max-width: 90%;
+}
+#tuning {
+  color: white;
+}
+body{
+  font-size: large;
+}
+#speedup{
+  position: absolute;
+  right: 20;
+}
+#slowdown{
+  position: absolute;
+  right: 160;
+}
+#speed{
+  position: absolute;
+  right: 110;
+  top: 10;
+}
+input[type="text"], textarea {
+  background-color : #333;
+}
 {% endblock %}
 {% block heading %}
-<h5 id='title'></h5>
+<!-- <div class='row'>
+<div class='col-md-3'>
+<p class='text-center subhead p_s'>Song:</p>
+<h5 class='text-center' id='song_name'></h5>
+</div>
+<div class='col-md-3'>
+<p class='text-center subhead p_s'>Original Artist:</p>
+<h5 class='text-center' id='o_artist'></h5>
+</div>
+<div class='col-md-3'>
+<p class='text-center subhead p_s'>Cover Artist:</p>
+<h5 class='text-center' id='c_artist'></h5>
+</div>
+</div> -->
+<!-- <h5 id='title'></h5> -->
 {% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-md-10">
+  <div class="col-md-11">
 
     <div id="video-placeholder"></div>
 
-    <div id="controls" class="container">
-      <input type="range" class="custom-range" id="progress-bar" value="0"><br>
+    <div id="controls">
+
+      <div class="mb-2" id='progress-bar'></div>
 
       <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
 
-          <button type="button" class="btn btn-primary btn-lg fixcontrol" id="play-toggle">
+          <button type="button" class="btn btn-light btn-lg fixcontrol" id="play-toggle">
             <ion-icon name="play"></ion-icon>
           </button>
 
 
-          <button type="button" class="btn btn-primary btn-lg fixcontrol" id="mute-toggle">
+          <button type="button" class="btn btn-light btn-lg fixcontrol" id="mute-toggle">
             <ion-icon name="volume-high"></ion-icon>
           </button>
 
-          <a><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
+          <a id='timecount'><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
         </div>
 
         <div class="col-md-4">
-
-          <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
-          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save">Save</button>
+          <a id="limit_warning"></a>
+          <!-- <button type="button" class="btn btn-light btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
+          <button type="button" class="btn btn-light fixbutt btn-lg " id="loop-save">Save</button> -->
 
         </div>
 
+        <div class='col-md-1'></div>
         <div class="col-md-3">
 
-          <button type='button' class='btn btn-primary btn-lg' id='slowdown'>
+          <button type='button' class='btn btn-light btn-lg mr-2' id='slowdown'>
             <ion-icon name="rewind"></ion-icon>
           </button>
-          <a id='speed'>1.00</a>
-          <button type='button' class='btn btn-primary btn-lg' id='speedup'>
+          <a id='speed'><span>1.00</span></a>
+          <button type='button' class='btn btn-light btn-lg ml-2' id='speedup'>
             <ion-icon name="fastforward"></ion-icon>
           </button>
 
         </div>
       </div>
 
-      <br>
-      <div id="slider-range"></div><br>
+      <div class='row'>
+
+        <div id='loop_saves'></div>
+
+        <div class="nstSlider mt-2 mb-3" data-range_min="0" data-range_max="100" data-cur_min="10" data-cur_max="90">
+          <div class="highlightPanel"></div>
+          <div class="bar"></div>
+          <div class="leftGrip"></div>
+          <div class="rightGrip"></div>
+        </div>
+
+      </div>
 
       <div class="row">
-        <div class='col-md-4'>
-          <label for="amount">Loop Range: </label>
-
+        <div class='col-md-5'>
+          <label for="amount" id='looprangelabel'>Loop Range: </label>
           <input class='ranges' type='text' id="loop-start">
           <span class="ranges"> - </span>
           <input class='ranges' type='text' id="loop-end">
         </div>
-        <div class='col-md-4'>
-          <a id="limit_warning"></a>
+        <div class='col-md-3'>
+          <!-- <a id="limit_warning"></a> -->
+          <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
+          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save">Save</button>
         </div>
         <div class='col-md-4'>
           <div id="recordingsList"></div>
         </div>
       </div>
 
-      <!-- <button type='button' class='btn btn-primary btn-xlarge m-2 loopButts'>
-      L5
-      <div class='smaller'>0:00 - 0:10</div>
-    </button> -->
+      <!-- <div id="slider-range"></div><br> -->
 
+    </div>
   </div>
-</div>
-<div class="col-md-2" id="right-col">
-  <div id='loop_saves'></div>
-  <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton'>
-    <ion-icon name="microphone"></ion-icon>
-  </button>
-  <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='pauseButton' disabled>
+
+  <div class="col-md-1" id="right-col">
+
+    <!-- <div id='loop_saves'></div> -->
+    <div id='tuning'></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Rename Your Loop</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="text" class="form-control" id="renametext" placeholder="Enter name">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id='renamesubmit'>Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton'>
+      <ion-icon name="microphone"></ion-icon>
+    </button>
+    <!-- <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='pauseButton' disabled>
     <ion-icon name="pause"></ion-icon>
-  </button>
-  <button type='button' class='btn btn-primary movebotbot ml-2 mr-2 btn-record' id='stopButton' disabled>
+  </button> -->
+  <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='stopButton' disabled>
     <ion-icon name="square"></ion-icon>
+  </button>
+  <button type='button' class='btn btn-success movebotbot ml-2 mr-2 btn-record' id='saveRecord' disabled>
+    <ion-icon name="checkmark-circle"></ion-icon>
   </button>
 </div>
 

@@ -9,23 +9,24 @@ var input; 							//MediaStreamAudioSourceNode we'll be recording
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext //audio context to help us record
 
-// var recordButton = document.getElementById("recordButton");
-// var stopButton = document.getElementById("stopButton");
-// var pauseButton = document.getElementById("pauseButton");
 var recordButton = $('#recordButton')
 var stopButton = $('#stopButton')
 var pauseButton = $('#pauseButton')
+var saveButton = $('#saveRecord')
 
 //add events to those 2 buttons
-// recordButton.addEventListener("click", startRecording);
 $(recordButton).on("click", startRecording);
 $(stopButton).on("click", stopRecording);
 $(pauseButton).on("click", pauseRecording);
+$(saveButton).on("click", markMastered);
 
 
 function startRecording() {
 	console.log("recordButton clicked");
-
+	var warning = $("<div class='alert alert-warning alert-dismissible fade show text-center'>");
+	var msg = "Recording";
+	$(warning).append(msg);
+	$('#recordingsList').empty().append(warning);
 	/*
 	Simple constraints object, for more advanced audio features see
 	https://addpipe.com/blog/audio-constraints-getusermedia/
@@ -40,9 +41,7 @@ function startRecording() {
 	$(recordButton).prop('disabled', true)
 	$(stopButton).prop('disabled', false)
 	$(pauseButton).prop('disabled', false)
-	// recordButton.disabled = true;
-	// stopButton.disabled = false;
-	// pauseButton.disabled = false
+	$(saveButton).prop('disabled', true)
 
 	/*
 	We're using the standard promise based getUserMedia()
@@ -78,19 +77,10 @@ function startRecording() {
 		//start the recording process
 		rec.record()
 
-		console.log("Recording started");
+		console.log("btn-deleteted");
 
 	}).catch(function(err) {
 		//enable the record button if getUserMedia() fails
-		// $(stopButton).remove()
-		// $(pauseButton).remove()
-		// var recordB = $("<button type='button' class='btn btn-primary movebot m-2 btn-xlarge' id='recordButton'>")
-		// var recordI = $('<ion-icon name="microphone">')
-		// $(recordB).append(recordI)
-		// $("#right-col").append(recordB)
-		// recordButton.disabled = false;
-		// stopButton.disabled = true;
-		// pauseButton.disabled = true
 		$(recordButton).prop('disabled', false)
 		$(stopButton).prop('disabled', true)
 		$(pauseButton).prop('disabled', true)
@@ -118,18 +108,9 @@ function stopRecording() {
 	console.log("stopButton clicked");
 
 	//disable the stop button, enable the record too allow for new recordings
-	// stopButton.disabled = true;
-	// recordButton.disabled = false;
-	// pauseButton.disabled = true;
 	$(recordButton).prop('disabled', false)
 	$(stopButton).prop('disabled', true)
 	$(pauseButton).prop('disabled', true)
-	// $(stopButton).remove()
-	// $(pauseButton).remove()
-	// var recordB = $("<button type='button' class='btn btn-primary movebot m-2 btn-xlarge' id='recordButton'>")
-	// var recordI = $('<ion-icon name="microphone">')
-	// $(recordB).append(recordI)
-	// $("#right-col").append(recordB)
 
 	//reset button just in case the recording is stopped while paused
 	// pauseButton.innerHTML="Pause";
@@ -153,11 +134,9 @@ function createDownloadLink(blob) {
 
 	//name of .wav file to use during upload and download (without extendion)
 	var filename = new Date().toISOString();
-
 	//add controls to the <audio> element
 	au.controls = true;
 	au.src = url;
-
 
 	//add the new audio element to li
 	div.appendChild(au);
@@ -170,5 +149,37 @@ function createDownloadLink(blob) {
 
 	//add the li element to the ol
 	$('#recordingsList').empty().append(div);
+
+	$(saveButton).prop('disabled', false);
+
 	// recordingsList.appendChild(div);
+}
+
+function markMastered(){
+	var new_recording = {
+		Id: video.Id,
+		Name: video.Name
+	}
+	save_mastered(new_recording)
+	$(saveButton).prop('disabled', true);
+}
+
+var save_mastered = function(new_mastered){
+  var data_to_save = new_mastered
+  $.ajax({
+    type: "POST",
+    url: "mark_mastered",
+    dataType : "json",
+    contentType: "application/json; charset=utf-8",
+    data : JSON.stringify(data_to_save),
+    success: function(result){
+      mastered = result["mastered"]
+    },
+    error: function(request, status, error){
+      console.log("Error");
+      console.log(request)
+      console.log(status)
+      console.log(error)
+    }
+  });
 }

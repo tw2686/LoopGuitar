@@ -40,6 +40,13 @@ var check_input = function(){
   }
   else if (tuning.length <= 0) {
     tuning = "NA"
+    var new_video = {
+      "Name": name,
+      "URL": url,
+      "Artist": artist,
+      "Tuning": tuning
+    }
+    save_video(new_video)
   }
   else {
     var new_video = {

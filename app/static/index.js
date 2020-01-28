@@ -6,6 +6,8 @@
 // Wait for html to be ready
 $(document).ready(function(){
 
+  $('#layoutcontainer').hide()
+  $('nav').removeClass('bg-dark')
   // Focus on brands input
   $("#lookup").focus();
 

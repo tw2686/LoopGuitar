@@ -9,11 +9,18 @@
 {% endblock %}
 {% block videos %}
 var videos = {{videos|tojson}};
+var mastered = {{mastered|tojson}};
 {% endblock %}
 {% block css %}
 #chart{
   width: 100%;
   height: 80%;
+}
+#mastered {
+  color: white;
+}
+.container {
+  max-width: 90%;
 }
 {% endblock %}
 {% block heading %}
@@ -23,7 +30,7 @@ var videos = {{videos|tojson}};
 <div class='row'>
   <div class='col-md-3'>
     <h2>Songs Mastered</h2>
-    <div class='mastered'></div>
+    <div id='mastered'></div>
   </div>
   <div class='col-md-9'>
     <h2>Progress</h2>

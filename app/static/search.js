@@ -50,11 +50,25 @@ var display_videos = function(videos){
   $("#videos").append(grid)
 }
 
+// Autocomplete video names
+var update_names = function(videos){
+  var videoNames = []
+  $.each(videos, function(i, video){
+    videoNames.push(video["Name"])
+  });
+  $( ".autovideos" ).autocomplete({
+    source: videoNames
+  });
+}
+
 // Wait for html to be ready
 $(document).ready(function(){
 
   // Focus on brands input
   $("#lookup").focus();
+
+  // Autocomplete videos
+  update_names(videos);
 
   // Check input first
   $("#lookup").val(input);

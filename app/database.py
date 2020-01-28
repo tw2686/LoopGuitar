@@ -17,38 +17,6 @@ videos = [
     },
     {
         "Id": 3,
-        "Name": "Ed Sheeran - Perfect - Fingerstyle Guitar Cover by James Bartholomew",
-        "URL": "5mUgkqyyDY0",
-        "Artist": "James Bartholomew",
-        "Tuning": "DADGBE",
-        "TimeSpent": 0
-    },
-    {
-        "Id": 4,
-        "Name": "Faded - Alan Walker (fingerstyle guitar cover by Peter Gergely)",
-        "URL": "69A2xXbI7QA",
-        "Artist": "Peter Gergely",
-        "Tuning": "DADGAD",
-        "TimeSpent": 0
-    },
-    {
-        "Id": 5,
-        "Name": "Photograph - Ed Sheeran | Fingerstyle Guitar Interpretation",
-        "URL": "ZJR8-KMamzQ",
-        "Artist": "Gareth Evans",
-        "Tuning": "DADG(b)AD",
-        "TimeSpent": 0
-    },
-    {
-        "Id": 6,
-        "Name": "How To Play Let Her Go - Passenger - Tutorial & Tabs / Guitar Lessonw",
-        "URL": "c43xd0rS2JU",
-        "Artist": "Gareth Evans",
-        "Tuning": "EADGBE",
-        "TimeSpent": 0
-    },
-    {
-        "Id": 7,
         "Name": "(Maroon 5) Payphone - Sungha Jung",
         "URL": "5LNTXE9e5ok",
         "Artist": "Sungha Jung",
@@ -56,27 +24,59 @@ videos = [
         "TimeSpent": 0
     },
     {
-        "Id": 8,
-        "Name": "(Yiruma) River Flow in You - Sungha Jung",
-        "URL": "P_xFh7XFC_w",
-        "Artist": "Sungha Jung",
-        "Tuning": "EADGBE",
-        "TimeSpent": 0
-    },
-    {
-        "Id": 9,
+        "Id": 4,
         "Name": "『ハナミズキ』(Fingerstyle Guitar) / Yuki Matsui",
         "URL": "w0hxzhu0mEc",
         "Artist": "Yuki Matsui",
         "Tuning": "DADGBD",
         "TimeSpent": 0
     },
+        {
+            "Id": 5,
+            "Name": "Say You Won't Let Go - James Arthur | Solo Fingerstyle Guitar Version",
+            "URL": "AwhqwzlZodk",
+            "Artist": "Gareth Evans",
+            "Tuning": "EADGBE",
+            "TimeSpent": 0
+        },
+    {
+        "Id": 6,
+        "Name": "君と僕 (You & Me Kimi to Boku) ~original song~(Fingerstyle Guitar) / Yuki Matsui",
+        "URL": "2PIonVMUNfY",
+        "Artist": "Yuki Matsui",
+        "Tuning": "EADGBE",
+        "TimeSpent": 0
+    },
+    {
+        "Id": 7,
+        "Name": "(Lady Gaga) Shallow - Gabriella Quevedo",
+        "URL": "zpAmePJx_7s",
+        "Artist": "Gabriella Quevedo",
+        "Tuning": "NA",
+        "TimeSpent": 0
+    },
+    {
+        "Id": 8,
+        "Name": "(The Beatles) Here Comes The Sun - Gabriella Quevedo",
+        "URL": "HGlIImajcRI",
+        "Artist": "Gabriella Quevedo",
+        "Tuning": "NA",
+        "TimeSpent": 0
+    },
+    {
+        "Id": 9,
+        "Name": "Stitches - Solo Fingerstyle Guitar Version",
+        "URL": "uzHe3lEchEI",
+        "Artist": "Gareth Evans",
+        "Tuning": "EADGBE",
+        "TimeSpent": 0
+    },
     {
         "Id": 10,
-        "Name": "Unravel - Tokyo Ghoul OP 1 [Full Version] Fingerstyle Guitar Cover",
-        "URL": "WxOulfAfKvk",
-        "Artist": "Eddie van der Meer",
-        "Tuning": "EADGBE",
+        "Name": "Hotel California Solo - The Eagles - Acoustic Guitar Cover",
+        "URL": "r3ebOxltJ1w",
+        "Artist": "Acoustician",
+        "Tuning": "NA",
         "TimeSpent": 0
     }
 ]

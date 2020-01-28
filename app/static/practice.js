@@ -13,7 +13,7 @@ var videoId = video.URL
 var player, startTime,
 time_update_interval = 0;
 
-var loopLimit = 4;
+var loopLimit = 5;
 var loopBool = false;
 var toggle = false;
 var loopStart = 0;
@@ -66,7 +66,8 @@ function onYouTubeIframeAPIReady() {
     // videoId: '5mUgkqyyDY0',
     // origin: 'https://www.youtube.com',
     playerVars: {
-      color: 'white'
+      color: 'white',
+      controls: 0
     },
     events: {
       onReady: initialize,
@@ -87,6 +88,18 @@ function initialize(){
   initSpeeds();
   bindKeyboardShorts();
 
+  $('.navbar').hide()
+  $(document).on('mousemove', function(e) {
+    if (e.pageY < 10) {
+      $('.navbar').slideDown();
+    }
+    else if (e.pageY > 100) {
+      $('.navbar').slideUp();
+    }
+  })
+  if (video.Tuning != "NA") {
+    $('#tuning').append(video.Tuning)
+  }
   // Clear any old interval.
   clearInterval(time_update_interval);
 
@@ -115,26 +128,53 @@ function updateTimerDisplay(){
 // This function is called by initialize()
 function updateProgressBar(){
   // Update the value of our progress bar accordingly.
-  $('#progress-bar').val((player.getCurrentTime() / player.getDuration()) * 100);
+  $("#progress-bar").slider('value', (player.getCurrentTime() / player.getDuration()) * 100);
 }
 
 
-// Progress bar
-$('#progress-bar').on('mouseup touchend', function (e) {
-  // Calculate the new time for the video.
-  // new time in seconds = total duration in seconds * ( value of range input / 100 )
-  var newTime = player.getDuration() * (e.target.value / 100);
+// Blue progress bar
+$( function() {
+  $( "#progress-bar" ).slider({
+    range: 'min',
+    min: 1,
+    slide: function( event, ui ) {
+      var curTime = ui.value
+      var newTime = player.getDuration() * (curTime / 100);
+      player.seekTo(newTime);
+    }
+  });
+});
 
-  // Skip video to new time.
-  player.seekTo(newTime);
-
+// nstSlider
+$('.nstSlider').nstSlider({
+  "left_grip_selector": ".leftGrip",
+  "right_grip_selector": ".rightGrip",
+  "value_bar_selector": ".bar",
+  "value_changed_callback": function(cause, leftValue, rightValue) {
+    var $container = $(this).parent();
+    if (toggle == true) {
+      loopStart = leftValue;
+      loopEnd = rightValue;
+    }
+    $container.find('.leftLabel').text(leftValue);
+    $container.find('.rightLabel').text(rightValue);
+    $('#loop-start').val(formatTime(leftValue))
+    $('#loop-end').val(formatTime(rightValue))
+  },
+  "highlight": {
+    "grip_class": "gripHighlighted",
+    "panel_selector": ".highlightPanel"
+  }
 });
 
 
 // Update slide range bar at the start
 function updateSlideBar(){
   $( "#slider-range" ).slider('option', {min:0, max: player.getDuration()});
+  $('.nstSlider').nstSlider('set_range', 0, player.getDuration());
+  $('.nstSlider').nstSlider('refresh');
 }
+
 
 // initialize slider-range
 $( function() {
@@ -166,18 +206,21 @@ $( function() {
   $('#loop-end').val(formatTime($( "#slider-range" ).slider( "values", 1 )))
 } );
 
-
 function updateSliderRange(){
-  var slide_s = $("#slider-range").slider('values')[0]
-  var slide_e = $("#slider-range").slider('values')[1]
+  // var slide_s = $("#slider-range").slider('values')[0]
+  // var slide_e = $("#slider-range").slider('values')[1]
+  var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
+  var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
   var text_s = formatBack($("#loop-start").val())
   var text_e = formatBack($("#loop-end").val())
   if (slide_s != text_s || slide_e != text_e) {
     $("#slider-range").slider('option', {values: [text_s, text_e]})
+    $(".nstSlider").nstSlider("set_position", text_s, text_e);
   }
 }
 
 $("#loop-start").keypress(function(e) {
+  $(document).unbind('keydown');
   if (e.which == 13) {
     event.preventDefault();
     updateSliderRange();
@@ -185,6 +228,7 @@ $("#loop-start").keypress(function(e) {
 });
 
 $("#loop-end").keypress(function(e) {
+  $(document).unbind('keydown');
   if (e.which == 13) {
     event.preventDefault();
     updateSliderRange();
@@ -195,8 +239,10 @@ $("#loop-end").keypress(function(e) {
 $('#loop-toggle').on('click', function () {
   var stopIcon = $("<ion-icon name='square'></ion-icon>");
   $('#limit_warning').empty();
-  loopStart = $("#slider-range").slider('values')[0]
-  loopEnd = $("#slider-range").slider('values')[1]
+  // loopStart = $("#slider-range").slider('values')[0]
+  // loopEnd = $("#slider-range").slider('values')[1]
+  loopStart = $(".nstSlider").nstSlider("get_current_min_value")
+  loopEnd = $(".nstSlider").nstSlider("get_current_max_value")
   $('.loopButts').not(this).removeClass('loop-active').text(function(){
     if ($(this).children().attr('name') == 'square') {
       var ntimes = $("<div class='smaller'>").text($(this).children().text());
@@ -210,11 +256,16 @@ $('#loop-toggle').on('click', function () {
     player.seekTo(loopStart);
     player.playVideo();
     $(this).addClass('loop-active').text('').append(stopIcon);
+    $('.nstSlider').nstSlider('highlight_range', loopStart, loopEnd);
+    $('.nstSlider .highlightPanel').css({'background': '#3CE0AF'})
   }
   else {
     loopBool = false;
     toggle = false;
+    player.pauseVideo()
     $(this).removeClass('loop-active').text('Loop');
+    $('.nstSlider').nstSlider('highlight_range');
+    $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'})
   }
 });
 
@@ -222,9 +273,12 @@ $('#loop-toggle').on('click', function () {
 // check for loop end to repeat
 function checkForLoop(loopStart, loopEnd){
   var curTime = player.getCurrentTime();
-  if(loopBool == true && (curTime >= loopEnd || curTime < loopStart)){
-    player.seekTo(loopStart);
-    player.playVideo();
+  if(loopBool == true){
+    $('.nstSlider').nstSlider('highlight_range', loopStart, loopEnd);
+    if (curTime >= loopEnd || curTime < loopStart) {
+      player.seekTo(loopStart);
+      player.playVideo();
+    }
   }
 }
 
@@ -233,16 +287,27 @@ function checkForLoop(loopStart, loopEnd){
 var update_loops = function(vid_loops){
   loopBool = false;
   toggle = false;
+  $('.nstSlider').nstSlider('highlight_range');
+  $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'})
   $('#loop-toggle').removeClass('loop-active').text('Loop');
 
   $("#loop_saves").empty();
+  $("#loop_saves2").empty();
   // var loopContainer = $("<div>");
   var stopIcon = $("<ion-icon class='mb-1' name='square'></ion-icon>");
   $.each(vid_loops, function(k, v){
     if (k != "Id") {
+      var loop_name = v[0];
+      var st = v[1];
+      var ed = v[2];
       var loopDiv = $("<div class='lb-wrap'>")
 
-      var del_but = $("<button type='button' class='btn btn-warning btn-circle'>&times</button>");
+      var del_but = $("<button type='button' class='btn btn-danger btn-delete'>&times</button>");
+      var edit_icon = $("<ion-icon class='small' name='create'>")
+      var edit_but = $("<button type='button' class='btn btn-warning btn-edit' data-toggle='modal' data-target='#myModal'>");
+      $(edit_but).append(edit_icon);
+      $(edit_but).attr('data-info', loop_name);
+      $(edit_but).attr('data-id', k);
       $(del_but).click(function(){
         $('#limit_warning').empty();
         var del_info = {
@@ -251,14 +316,12 @@ var update_loops = function(vid_loops){
         }
         delete_loop(del_info);
       })
-      $(loopDiv).append(del_but)
-
+      $(loopDiv).append(del_but).append(edit_but);
       var loopButton = $("<button type='button' class='btn btn-primary btn-xlarge m-2 loopButts'>");
       $(loopButton).attr('id', k)
-      var st = v[0];
-      var ed = v[1];
+
       var times = $("<div class='smaller'>").text(formatTime(st) + ' - ' + formatTime(ed))
-      $(loopButton).append(k).append(times);
+      $(loopButton).append(loop_name).append(times);
       $(loopButton).click(function(){
         $('#limit_warning').empty();
         $('.loopButts').not(this).removeClass('loop-active').text(function(){
@@ -282,31 +345,58 @@ var update_loops = function(vid_loops){
           player.seekTo(st);
           player.playVideo();
           $(this).addClass('loop-active').text('').append(stopIcon).append(times);
+          $('.nstSlider').nstSlider('highlight_range', loopStart, loopEnd);
+          $('.nstSlider .highlightPanel').css({'background': '#3CE0AF'})
         }
         else {
           loopBool = false;
-          $(this).removeClass('loop-active').text(k).append(times);
+          player.pauseVideo()
+          $(this).removeClass('loop-active').text(loop_name).append(times);
+          $('.nstSlider').nstSlider('highlight_range');
+          $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'})
         }
       })
 
       $(loopDiv).append(loopButton)
       $("#loop_saves").append(loopDiv);
+      // $("#loop_saves2").append(loopDiv);
     }
+  })
+  $('#myModal').on('show.bs.modal', function (event) {
+    $(document).unbind('keydown');
+    var but = $(event.relatedTarget);
+    var info = but.data('info');
+    var id = but.data('id');
+    var modal = $(this);
+    modal.find('.modal-body input').val(info);
+    modal.find('.modal-footer #renamesubmit').on('click', function() {
+      var newname = modal.find('.modal-body input').val();
+      var new_vid_loops = $.extend(true, {}, vid_loops);
+      new_vid_loops[id][0] = newname;
+      save_loop(new_vid_loops);
+    })
+  })
+  $('#myModal').on('hidden.bs.modal', function(event){
+    bindKeyboardShorts()
   })
 }
 
 // check if loops of video is empty
-if (!$.isEmptyObject(vid_loops)) {
-  update_loops(vid_loops)
+function initializeLoops(){
+  if (!$.isEmptyObject(vid_loops)) {
+    update_loops(vid_loops);
+  }
 }
-
 
 // save loop
 $('#loop-save').on('click', function () {
   $('#limit_warning').empty();
-  var start = $("#slider-range").slider('values')[0]
-  var end = $("#slider-range").slider('values')[1]
+  // var start = $("#slider-range").slider('values')[0]
+  // var end = $("#slider-range").slider('values')[1]
+  var start = $(".nstSlider").nstSlider("get_current_min_value")
+  var end = $(".nstSlider").nstSlider("get_current_max_value")
   console.log(start, end)
+  player.pauseVideo()
   if (!$.isEmptyObject(vid_loops)){
     var length = Object.keys(vid_loops).length
     var largest = 1
@@ -317,7 +407,7 @@ $('#loop-save').on('click', function () {
     if (length <= loopLimit) {
       var loop_id = 'L' + largest;
       var new_loop = {}
-      new_loop[loop_id] = [start, end]
+      new_loop[loop_id] = ["Loop" + largest, start, end]
       var new_vid_loops = $.extend(vid_loops, new_loop)
       save_loop(new_vid_loops)
     }
@@ -330,12 +420,11 @@ $('#loop-save').on('click', function () {
     var last_part = parts[parts.length-1]
     var new_vid_loops = {
       Id: parseInt(last_part),
-      l1: [start, end]
+      L1: ["Loop1", start, end]
     }
     save_loop(new_vid_loops)
   }
 });
-
 
 
 // Save loop to database
@@ -385,9 +474,13 @@ var delete_loop = function(del_info){
 // display loop limit reached
 var display_limit = function(){
   $('#limit_warning').val("");
-  var warning = $("<a class='alert alert-warning'>");
-  var msg = "Limit of " + loopLimit + " loops reached."
+  var warning = $("<div class='alert alert-warning alert-dismissible fade show'>");
+  var msg = "Limit of " + loopLimit + " loops reached.";
+  var close_but = $("<button type='button' class='close' data-dismiss='alert' aria-label='Close'>");
+  var span = $('<span aria-hidden="true">&times;</span>');
+  $(close_but).append(span);
   $(warning).append(msg);
+  $(warning).append(close_but);
   $('#limit_warning').append(warning);
 }
 

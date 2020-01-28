@@ -8,8 +8,13 @@
 {% block videos %}
 var videos = {{videos|tojson}};
 {% endblock %}
+{% block css %}
+label{
+  color: white;
+}
+{% endblock %}
 {% block heading %}
-<h1> Add Video Page </h1>
+<h1> Import Video </h1>
 {% endblock %}
 {% block content %}
 
@@ -30,12 +35,12 @@ var videos = {{videos|tojson}};
       <input type="text" class="form-control" id="artist" placeholder="Artist">
     </div>
     <div class="form-group col-md-6">
-      <label for="headquarters">Tuning(Optional)</label>
+      <label for="headquarters">Tuning (Optional)</label>
       <input type="text" class="form-control" id="tuning" placeholder="EADGBE">
     </div>
   </div>
   <div>
-    <button type="button" class="btn btn-primary mr-5" id="submit">Submit</button>
+    <button type="button" class="btn btn-primary mr-5" id="submit">Import</button>
     <a id="record_link"></a>
   </div>
 </form>

@@ -11,17 +11,20 @@ from database import videos
 app = Flask(__name__)
 
 
-current_id = 2
+current_id = 10
 
 
 loop_saves = [{}] * current_id
 loop_saves[0] = {
     'Id': 1,
-    'L1': (60, 73),
-    'L2': (108, 121),
-    'L3': (135, 147)
+    'L1': ("Loop1", 60, 73),
+    'L2': ("Loop2", 108, 121),
+    'L3': ("Loop3", 135, 147)
 }
 
+recordings = [{}] * current_id
+
+mastered = [{}] * current_id
 
 @app.route('/')
 def home():
@@ -55,7 +58,7 @@ def save_video():
     }
 
     videos.append(new_video)
-    loop_saves.append({})
+    loop_saves.append({'Id': new_id})
 
     return jsonify(videos=videos)
 
@@ -90,6 +93,7 @@ def save_loop():
         vid_loops[k] = v
     loop_saves[id - 1] = vid_loops
 
+
     return jsonify(new_vid_loops=loop_saves[id - 1])
 
 
@@ -117,8 +121,33 @@ def record():
 
 @app.route('/progress')
 def progress():
-    global videos
-    return render_template('progress.html', videos=videos)
+    global videos, recordings
+    return render_template('progress.html', videos=videos, mastered=mastered)
+
+
+@app.route('/mark_mastered', methods=['GET', 'POST'])
+@app.route('/practice/mark_mastered', methods=['GET', 'POST'])
+def mark_mastered():
+    global recordings, mastered
+    # json_data = request.get_json()
+    # vid_id = json_data['Id']
+    # updateRecord = {}
+    # for k, v in json_data.items():
+    #     updateRecord[k] = v
+    # recordings[vid_id-1] = updateRecord
+    # print(recordings)
+    # print(request.files)
+    # updateRecord = {}
+    # updateRecord['Id'] = 1
+    # updateRecord['Name'] = "Song"
+    # updateRecord['Audio'] = request.files
+    json_data = request.get_json()
+    vid_id = json_data['Id']
+    updateMastered = {}
+    for k, v in json_data.items():
+        updateMastered[k] = v
+    mastered[vid_id-1] = updateMastered
+    return jsonify(mastered=mastered)
 
 
 @app.route('/save_time', methods=['GET', 'POST'])
