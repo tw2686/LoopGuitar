@@ -1,0 +1,209 @@
+<body>
+    <nav class="navbar navbar--studio">
+        <a class="navbar__exit" href="/user/videos/"><img src="/assets/images/icons/svg/1425929038_circle_arrow-right_left_back.svg" width="24"></a>
+            </nav>
+    <div class="studio">
+        <div class="left">
+            <iframe id="ytapiplayer" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="100%" height="100%" src="https://www.youtube.com/embed/V3cEhbO9Kv8?autoplay=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;disablekeyboard=1&amp;iv_load_policy=3&amp;rel=0&amp;html5=1&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fwww.youloop.io&amp;widgetid=1"></iframe>
+            <div id="timeline">
+                <div id="progressbar">
+                    <div id="progressbar__elapsed" style="width: 83.6%;"></div>
+                </div>
+                                    <a class="timeline__loop js__play_loop" id="25786" data-start="115.0" data-end="142.0" title="First Loop" href="#" style="width: 10.037%; left: 42.751%; z-index: 99;">First Loop</a>                                    <a class="timeline__loop js__play_loop" id="25788" data-start="159.0" data-end="196.0" title="Second Loop" href="#" style="width: 13.755%; left: 59.108%; z-index: 72;">Second Loop</a>                            </div>
+            <div id="add_loop">
+                <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"><div class="ui-slider-range ui-widget-header ui-corner-all" style="left: 10.0372%; width: 79.9257%;"></div><span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 10.0372%;"></span><span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 89.9628%;"></span></div>
+            </div>
+            <div id="bottom_controls">
+                <div id="playback_controls">
+                    <div>
+                        <button title="Pause" class="btn btn--gray pause" style="display: none;">
+                            <img src="/assets/images/icons/svg/pause.svg" height="24"></button>
+                        <button title="Play" class="btn btn--gray play" style="display: flex;">
+                            <img src="/assets/images/icons/svg/play.svg" height="24"></button>
+                        <button title="Slow down video" class="btn btn--gray speed" style="display: flex;">
+                            <img class="playback_controls__slow" src="/assets/images/icons/svg/slow.svg" height="28">
+                            <img class="playback_controls__slow-50" src="/assets/images/icons/svg/slow_50.svg" height="28">
+                            <img class="playback_controls__slow-75" src="/assets/images/icons/svg/slow_75.svg" height="28">
+                            <span>Slow down</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn--gray" id="start_loop" title="Set loop start">
+                            <img src="/assets/images/icons/svg/loop_in.svg" width="24">
+                            <span>Loop in</span>
+                        </button>
+                                                    <button class="btn btn--gray" id="js__save_loop">
+                                <img src="/assets/images/icons/svg/loop_save.svg" width="20">
+                                <span>Save</span></button>
+                                                <button class="btn btn--gray" id="end_loop" title="Set loop end">
+                            <img src="/assets/images/icons/svg/loop_out.svg" width="24">
+                            <span>Loop out</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn--transparent" data-toggle="shortcuts" id="js__shortcuts">
+                            <img src="/assets/images/icons/svg/iconmonstr-keyboard-6-icon.svg" width="18">
+                            <span>Shortcuts</span>
+                        </button>
+                        <button id="fullscreen" class="btn btn--transparent">
+                            <img src="/assets/images/icons/svg/iconmonstr-fullscreen-7-icon.svg" width="18">
+                            <span>Fullscreen</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="loop_list_wrapper">
+                <div class="loop_list__my">
+                    <ul class="loop_list">
+            <li class="js__lastadded">
+            <div class="loop_list__container">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="loop_infos">
+                    <tbody><tr class="see_loop" valign="middle">
+                        <td>
+                            <a class="play_loop js__play_loop" data-start="115.0" data-end="142.0" href="#" id="25786">
+                                <span class="loop__title">First Loop</span>
+                                01:55.000 - 02:22.000
+                            </a>
+                        </td>
+                                                    <td width="40" align="center">
+                                <a class="action edit_loop js__edit_loop" href="#" data-edit="25786"><img src="/assets/images/icons/svg/1421265702_circle_edit_pen_pencil.svg" width="24"></a>
+                            </td>
+                            <td width="40" align="center">
+                                <a class="action remove_loop js__remove_loop" href="#" data-remove="25786"><img src="/assets/images/icons/svg/iconmonstr-trash-can-12-icon.svg" width="24"></a>
+                            </td>
+                                            </tr>
+                </tbody></table>
+                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tbody><tr class="edit_loop">
+                        <td><input name="loop_name" id="25786" type="text" value="First Loop">
+                        </td>
+                        <td width="60" align="center">
+                            <a class="action edit_confirm js__edit_confirm" href="#" data-remove="25786"><img src="/assets/images/icons/svg/1421267089_circle-check.svg" width="24"></a>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </li>
+            <li>
+            <div class="loop_list__container">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="loop_infos">
+                    <tbody><tr class="see_loop" valign="middle">
+                        <td>
+                            <a class="play_loop js__play_loop" data-start="159.0" data-end="196.0" href="#" id="25788">
+                                <span class="loop__title">Second Loop</span>
+                                02:39.000 - 03:16.000
+                            </a>
+                        </td>
+                                                    <td width="40" align="center">
+                                <a class="action edit_loop js__edit_loop" href="#" data-edit="25788"><img src="/assets/images/icons/svg/1421265702_circle_edit_pen_pencil.svg" width="24"></a>
+                            </td>
+                            <td width="40" align="center">
+                                <a class="action remove_loop js__remove_loop" href="#" data-remove="25788"><img src="/assets/images/icons/svg/iconmonstr-trash-can-12-icon.svg" width="24"></a>
+                            </td>
+                                            </tr>
+                </tbody></table>
+                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tbody><tr class="edit_loop">
+                        <td><input name="loop_name" id="25788" type="text" value="Second Loop">
+                        </td>
+                        <td width="60" align="center">
+                            <a class="action edit_confirm js__edit_confirm" href="#" data-remove="25788"><img src="/assets/images/icons/svg/1421267089_circle-check.svg" width="24"></a>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </li>
+    </ul>
+                </div>
+                            </div>
+            <div class="metronome">
+                <span class="metronome__toggle" data-toggle="metronome"><img src="/assets/images/icons/svg/metronome.svg" width="16" alt=""></span>
+                                    <span class="metronome__tempo js__displayed_tempo">80</span>
+                    <div class="metronome__controls">
+                        <button class="btn js__metronome_down">-</button>
+                        <button class="btn js__metronome_up">+</button>
+                        <button class="btn js__metronome_start">Start</button>
+                        <button class="btn js__metronome_stop">Stop</button>
+                    </div>
+                    <span class="metronome__led"></span>
+                    <span class="metronome__title">Metronome</span>
+                            </div>
+        </div>
+    </div>
+    <div class="modal" id="fullaccess">
+        <div class="modal__content">
+            <div class="modal__content__title">
+                <h2>Sign up to save your loops</h2>
+            </div>
+            <div class="modal__content__body">
+                <p>Sign up for a free account to save all your loops, and much more!</p>
+                <a href="/signup/" class="btn btn-primary">Sign up now</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="shortcuts">
+        <div class="modal__content">
+            <div class="modal__content__title">
+                <h2>Shortcuts</h2>
+            </div>
+            <div class="modal__content__body">
+                <table width="100%">
+                    <tbody><tr>
+                        <td width="100">→</td>
+                        <td><b>Move Forward 1s</b></td>
+                    </tr>
+                    <tr>
+                        <td>←</td>
+                        <td><b>Move Backward 1s</b></td>
+                    </tr>
+                    <tr>
+                        <td>Spacebar</td>
+                        <td><b>Play / Pause</b></td>
+                    </tr>
+                    <tr>
+                        <td>c</td>
+                        <td><b>Go back to the loop start</b></td>
+                    </tr>
+                </tbody></table>
+            </div>
+        <a href="#" class="js__closemodal"><img src="/assets/images/icons/svg/1425991358_circle-close.svg" width="24"></a></div>
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script defer="" src="/assets/javascripts/build/nsmeneersteoartsal.min.js"></script>    <script type="text/javascript">
+        window.onYouTubePlayerAPIReady = function () {
+            $(document).ready(function () {
+                window.player = new YoutubePlayer();
+                window.player.init('V3cEhbO9Kv8', '18868');
+            });
+        };
+        $(document).ready(function () {
+            $('#js__shortcuts').modal();
+                                    var tooltip = true;
+            $('body').on('loopsaved', function () {
+                if (tooltip) {
+                    $('li.js__lastadded').append('<div class="dropdown visible">Click on the pencil to customize the name of your loop.</div>');
+                }
+                tooltip = false;
+            });
+                    });
+    </script>
+<script defer="" src="/assets/javascripts/build/ppwnon.min.js"></script><script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-58877372-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+</body>

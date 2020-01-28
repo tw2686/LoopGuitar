@@ -1,0 +1,83 @@
+<!-- Tsun Ting (James) Wong - tw2686
+COMS 4170: User Interface Design
+Homework 11 -->
+
+<!-- <!DOCTYPE html> -->
+<html>
+<head>
+  {% block head %}{% endblock %}
+
+  <!-- JQuery -->
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+  {% block script %}{% endblock %}
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <!-- bootstrap same as before -->
+  <link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+  <!-- jQuery Code -->
+  <script>
+    {% block brands %}{% endblock %}
+  </script>
+
+  <!-- CSS -->
+  <style>
+    .nameStyleS{
+      font-size: x-large;
+    }
+    .urlStyleS{
+      color: green;
+    }
+    .indusStyleS{
+      opacity: 0.7;
+    }
+    .boldish{
+      font-weight: 500;
+    }
+    .small{
+      font-size: small;
+    }
+    img{
+      width: 80%;
+    }
+  </style>
+
+</head>
+
+<!-- Body -->
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">Learn Guitar Songs</a>
+
+    <!-- Collapsed Navbar Icon was not expanding -->
+
+    <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button> -->
+
+  <!-- <div class="collapse navbar-collapse" id="navbarNavAltMarkup"> -->
+  <div id="navbarNavAltMarkup">
+    <ul class="nav navbar-nav">
+      <li class="active"><a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
+      <li><a class="nav-item nav-link" href="/practice">Practice</a></li>
+      <li><a class="nav-item nav-link" href="/add_item">Add Video</a></li>
+      <li><a class="nav-item nav-link" href="/search">Search</a></li>
+    </ul>
+  </div>
+  <!-- </div> -->
+</nav>
+
+<div class="container">
+  <br>
+  {% block heading %}{% endblock %}
+  <br>
+  {% block content %}
+  <div>{% block item %}{% endblock %}</div>
+  {% endblock %}
+</div>
+{% block script2 %}{% endblock %}
+</body>
+</html>

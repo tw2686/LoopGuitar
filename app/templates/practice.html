@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block head %}
+<title>Practice</title>
+{% endblock %}
+{% block script %}
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'practice.js') }}"></script>
+{% endblock %}
+{% block brands %}
+{% endblock %}
+{% block heading %}
+<h1> Technical Prototype </h1>
+{% endblock %}
+{% block item %}
+<h4>Video</h4>
+<div id="player"></div>
+<!-- <div id="video-placeholder"></div> -->
+<br>
+<button id="play" type="button">Play</button>
+<button type="button" id="pause">Pause</button>
+<!-- <button type="button" class="btn btn-primary" id="mute-toggle">Mute</button> -->
+<a id="current-time"></a>
+<a> / </a>
+<a id="duration"></a>
+<!-- <i id="mute-toggle" class="material-icons">volume_up</i> -->
+<!-- <input id="volume-input" type="number" max="100" min="0"></input> -->
+
+
+
+<!-- <iframe id="player"
+width="560" height="315"
+src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1" -->
+<!-- src="https://www.youtube.com/embed/gEyqWxq5LNk?enablejsapi=1&version=3&playerapiid=ytplayer" -->
+<!-- frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen allowscriptaccess="always">
+</iframe> -->
+<!-- <button type="button" class="btn btn-primary mr-5" id="stop">Stop</button> -->
+
+<!-- <iframe id="player"
+frameborder="0" allowfullscreen="1"
+allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+title="YouTube video player" width="560" height="315"
+src="https://www.youtube.com/embed/V3cEhbO9Kv8?autoplay=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;disablekeyboard=1&amp;iv_load_policy=3&amp;rel=0&amp;html5=1&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fwww.youloop.io&amp;widgetid=1">
+</iframe> -->
+
+
+{% endblock %}
+{% block content %}
+{{ super() }}
+{% endblock %}
+{% block script2 %}
+{% endblock %}
