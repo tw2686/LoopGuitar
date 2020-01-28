@@ -29,7 +29,7 @@ window.onbeforeunload = function(){
   var endTime = d.getTime()
   var diff = Math.round((endTime - startTime)/1000) + video.TimeSpent
   var timeobj = {
-    Id: vid_loops.Id,
+    Id: video.Id,
     TimeSpent: diff
   }
   save_time(timeobj)
@@ -61,10 +61,9 @@ var save_time = function(timeobj){
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('video-placeholder', {
     width: '100%',
-    height: '480',
+    // height: '480',
+    height: '60%',
     videoId: videoId,
-    // videoId: '5mUgkqyyDY0',
-    // origin: 'https://www.youtube.com',
     playerVars: {
       color: 'white',
       controls: 0
@@ -86,7 +85,12 @@ function initialize(){
   updateProgressBar();
   updateSlideBar();
   initSpeeds();
+  initializeLoops();
   bindKeyboardShorts();
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'})
+  })
 
   $('.navbar').hide()
   $(document).on('mousemove', function(e) {
@@ -140,6 +144,7 @@ $( function() {
     slide: function( event, ui ) {
       var curTime = ui.value
       var newTime = player.getDuration() * (curTime / 100);
+      $('#current-time').text(formatTime( newTime ));
       player.seekTo(newTime);
     }
   });
@@ -167,60 +172,23 @@ $('.nstSlider').nstSlider({
   }
 });
 
-
 // Update slide range bar at the start
 function updateSlideBar(){
-  $( "#slider-range" ).slider('option', {min:0, max: player.getDuration()});
   $('.nstSlider').nstSlider('set_range', 0, player.getDuration());
   $('.nstSlider').nstSlider('refresh');
 }
 
-
-// initialize slider-range
-$( function() {
-  $( "#slider-range" ).slider({
-    range: true,
-    values: [ 0, 10 ],
-    slide: function( event, ui ) {
-      var start = ui.values[0];
-      var end = ui.values[1];
-      if (toggle == true) {
-        loopStart = start;
-        loopEnd = end;
-      }
-      $('#loop-start').val(formatTime(start))
-      $('#loop-end').val(formatTime(end))
-    },
-    change: function( event, ui ) {
-      var start = ui.values[0];
-      var end = ui.values[1];
-      if (toggle == true) {
-        loopStart = start;
-        loopEnd = end;
-      }
-      $('#loop-start').val(formatTime(start))
-      $('#loop-end').val(formatTime(end))
-    }
-  });
-  $('#loop-start').val(formatTime($( "#slider-range" ).slider( "values", 0 )))
-  $('#loop-end').val(formatTime($( "#slider-range" ).slider( "values", 1 )))
-} );
-
 function updateSliderRange(){
-  // var slide_s = $("#slider-range").slider('values')[0]
-  // var slide_e = $("#slider-range").slider('values')[1]
   var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
   var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
   var text_s = formatBack($("#loop-start").val())
   var text_e = formatBack($("#loop-end").val())
   if (slide_s != text_s || slide_e != text_e) {
-    $("#slider-range").slider('option', {values: [text_s, text_e]})
     $(".nstSlider").nstSlider("set_position", text_s, text_e);
   }
 }
 
 $("#loop-start").keypress(function(e) {
-  $(document).unbind('keydown');
   if (e.which == 13) {
     event.preventDefault();
     updateSliderRange();
@@ -228,19 +196,18 @@ $("#loop-start").keypress(function(e) {
 });
 
 $("#loop-end").keypress(function(e) {
-  $(document).unbind('keydown');
   if (e.which == 13) {
     event.preventDefault();
     updateSliderRange();
   }
 });
 
+$('#loop-restart').on('click', backloopStart);
+
 // initialize loop toggle click event
 $('#loop-toggle').on('click', function () {
   var stopIcon = $("<ion-icon name='square'></ion-icon>");
   $('#limit_warning').empty();
-  // loopStart = $("#slider-range").slider('values')[0]
-  // loopEnd = $("#slider-range").slider('values')[1]
   loopStart = $(".nstSlider").nstSlider("get_current_min_value")
   loopEnd = $(".nstSlider").nstSlider("get_current_max_value")
   $('.loopButts').not(this).removeClass('loop-active').text(function(){
@@ -248,24 +215,29 @@ $('#loop-toggle').on('click', function () {
       var ntimes = $("<div class='smaller'>").text($(this).children().text());
       $(this).text($(this).attr('id')).append(ntimes);
       loopBool = false
+      $('#loop-restart').prop('disabled', true)
     }
   })
   if (loopBool == false) {
     loopBool = true;
+    $('#loop-restart').prop('disabled', false)
     toggle = true;
     player.seekTo(loopStart);
     player.playVideo();
     $(this).addClass('loop-active').text('').append(stopIcon);
     $('.nstSlider').nstSlider('highlight_range', loopStart, loopEnd);
-    $('.nstSlider .highlightPanel').css({'background': '#3CE0AF'})
+    $('.nstSlider .highlightPanel').css({'background': '#3CE0AF'});
+    $(this).attr('data-original-title', 'Stop Loop (l)');
   }
   else {
     loopBool = false;
     toggle = false;
+    $('#loop-restart').prop('disabled', true)
     player.pauseVideo()
     $(this).removeClass('loop-active').text('Loop');
     $('.nstSlider').nstSlider('highlight_range');
-    $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'})
+    $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'});
+    $(this).attr('data-original-title', 'Begin Loop (l)');
   }
 });
 
@@ -287,13 +259,16 @@ function checkForLoop(loopStart, loopEnd){
 var update_loops = function(vid_loops){
   loopBool = false;
   toggle = false;
+  $('#loop-restart').prop('disabled', true)
   $('.nstSlider').nstSlider('highlight_range');
   $('.nstSlider .highlightPanel').css({'background': 'rgb(255, 255, 102, 0)'})
   $('#loop-toggle').removeClass('loop-active').text('Loop');
 
   $("#loop_saves").empty();
   $("#loop_saves2").empty();
-  // var loopContainer = $("<div>");
+
+  var keybinds = ['(q)', '(w)', '(e)', '(r)', '(t)']
+  var keyI = 0;
   var stopIcon = $("<ion-icon class='mb-1' name='square'></ion-icon>");
   $.each(vid_loops, function(k, v){
     if (k != "Id") {
@@ -317,8 +292,10 @@ var update_loops = function(vid_loops){
         delete_loop(del_info);
       })
       $(loopDiv).append(del_but).append(edit_but);
-      var loopButton = $("<button type='button' class='btn btn-primary btn-xlarge m-2 loopButts'>");
+      var loopButton = $("<button type='button' class='btn btn-primary btn-xlarge m-2 loopButts' data-toggle='tooltip'>");
       $(loopButton).attr('id', k)
+      $(loopButton).attr('data-original-title', k + ' ' + keybinds[keyI]).tooltip({trigger: 'hover'})
+      keyI += 1;
 
       var times = $("<div class='smaller'>").text(formatTime(st) + ' - ' + formatTime(ed))
       $(loopButton).append(loop_name).append(times);
@@ -336,12 +313,14 @@ var update_loops = function(vid_loops){
               $(this).text(id).append(ntimes);
             }
             loopBool = false
+            $('#loop-restart').prop('disabled', true)
           }
         })
         loopStart = st
         loopEnd = ed
         if (loopBool == false) {
           loopBool = true;
+          $('#loop-restart').prop('disabled', false)
           player.seekTo(st);
           player.playVideo();
           $(this).addClass('loop-active').text('').append(stopIcon).append(times);
@@ -350,6 +329,7 @@ var update_loops = function(vid_loops){
         }
         else {
           loopBool = false;
+          $('#loop-restart').prop('disabled', true)
           player.pauseVideo()
           $(this).removeClass('loop-active').text(loop_name).append(times);
           $('.nstSlider').nstSlider('highlight_range');
@@ -391,8 +371,6 @@ function initializeLoops(){
 // save loop
 $('#loop-save').on('click', function () {
   $('#limit_warning').empty();
-  // var start = $("#slider-range").slider('values')[0]
-  // var end = $("#slider-range").slider('values')[1]
   var start = $(".nstSlider").nstSlider("get_current_min_value")
   var end = $(".nstSlider").nstSlider("get_current_max_value")
   console.log(start, end)
@@ -492,10 +470,12 @@ $('#play-toggle').on('click', function(){
   var state = player.getPlayerState();
   if (state != 1) {
     icon = $('<ion-icon name="pause"></ion-icon>');
+    play_toggle.attr('data-original-title', 'Pause (space)');
     player.playVideo();
   }
   else {
     icon = $('<ion-icon name="play"></ion-icon>');
+    play_toggle.attr('data-original-title', 'Play (space)');
     player.pauseVideo();
   }
   play_toggle.append(icon)
@@ -521,11 +501,13 @@ $('#mute-toggle').on('click', function() {
   if(player.isMuted()){
     player.unMute();
     var icon = $('<ion-icon name="volume-high"></ion-icon>')
+    mute_toggle.attr('data-original-title', 'Mute (m)');
     mute_toggle.append(icon)
   }
   else{
     player.mute();
-    var icon = $('<ion-icon name="volume-mute"></ion-icon>')
+    var icon = $('<ion-icon name="volume-mute"></ion-icon>');
+    mute_toggle.attr('data-original-title', 'Unmute (m)');
     mute_toggle.append(icon);
   }
 });
@@ -571,26 +553,27 @@ function backward(){
 
 // front slider
 function frontSliderFor(){
-  var slide_s = $("#slider-range").slider('values')[0]
-  var slide_e = $("#slider-range").slider('values')[1]
-  $("#slider-range").slider('option', {values: [slide_s+1, slide_e]})
+  var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
+  var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
+  $(".nstSlider").nstSlider("set_position", slide_s+1, slide_e);
+
 }
 function frontSliderBack(){
-  var slide_s = $("#slider-range").slider('values')[0]
-  var slide_e = $("#slider-range").slider('values')[1]
-  $("#slider-range").slider('option', {values: [slide_s-1, slide_e]})
+  var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
+  var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
+  $(".nstSlider").nstSlider("set_position", slide_s-1, slide_e);
 }
 
 // back slider
 function backSliderFor(){
-  var slide_s = $("#slider-range").slider('values')[0]
-  var slide_e = $("#slider-range").slider('values')[1]
-  $("#slider-range").slider('option', {values: [slide_s, slide_e+1]})
+  var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
+  var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
+  $(".nstSlider").nstSlider("set_position", slide_s, slide_e+1);
 }
 function backSliderBack(){
-  var slide_s = $("#slider-range").slider('values')[0]
-  var slide_e = $("#slider-range").slider('values')[1]
-  $("#slider-range").slider('option', {values: [slide_s, slide_e-1]})
+  var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
+  var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
+  $(".nstSlider").nstSlider("set_position", slide_s, slide_e-1);
 }
 
 // quality
@@ -606,32 +589,27 @@ $.getScript('/static/record.js');
 // bind key board short cuts
 function bindKeyboardShorts(){
   $(document).keydown(function(e){
+    e.stopImmediatePropagation();
+    e.preventDefault();
     if (e.keyCode == 32){
-      e.preventDefault();
       $("#play-toggle").click();
     }
     else if (e.keyCode == 39) {
-      e.preventDefault();
       forward()
     }
     else if (e.keyCode == 37) {
-      e.preventDefault();
       backward()
     }
     else if (e.keyCode == 77) {
-      e.preventDefault();
       $('#mute-toggle').click();
     }
     else if (e.keyCode == 83) {
-      e.preventDefault();
       $('#loop-save').click();
     }
     else if (e.keyCode == 76) {
-      e.preventDefault();
       $('#loop-toggle').click();
     }
-    else if (e.keyCode == 82) {
-      e.preventDefault();
+    else if (e.keyCode == 68) {
       if ($('#recordButton').is(':disabled')) {
         $('#stopButton').click();
       }
@@ -639,51 +617,68 @@ function bindKeyboardShorts(){
         $('#recordButton').click();
       }
     }
-    else if (e.keyCode == 90) {
-      e.preventDefault();
+    else if (e.keyCode == 81) {
       if ($('#L1').length != 0)
       $('#L1').click();
     }
-    else if (e.keyCode == 88) {
-      e.preventDefault();
+    else if (e.keyCode == 87) {
       if ($('#L2').length != 0)
       $('#L2').click();
     }
-    else if (e.keyCode == 67) {
-      e.preventDefault();
-      if ($('#L3').length != 0)
-      $('#L3').click();
+    else if (e.keyCode == 69) {
+      if ($('#L3').length != 0){
+        $('#L3').click();
+      }
     }
-    else if (e.keyCode == 86) {
-      e.preventDefault();
+    else if (e.keyCode == 82) {
       if ($('#L4').length != 0)
       $('#L4').click();
     }
-    else if (e.keyCode == 74) {
-      e.preventDefault();
+    else if (e.keyCode == 84) {
+      if ($('#L5').length != 0)
+      $('#L5').click();
+    }
+    else if (e.keyCode == 72) {
       $('#slowdown').click();
     }
-    else if (e.keyCode == 75) {
-      e.preventDefault();
+    else if (e.keyCode == 74) {
       $('#speedup').click();
     }
     else if (e.keyCode == 85) {
-      e.preventDefault();
       frontSliderBack();
     }
     else if (e.keyCode == 73) {
-      e.preventDefault();
       frontSliderFor();
     }
     else if (e.keyCode == 79) {
-      e.preventDefault();
       backSliderBack();
     }
     else if (e.keyCode == 80) {
-      e.preventDefault();
       backSliderFor();
     }
+    else if (e.keyCode == 67) {
+      if ($("#saveRecord").is('[disabled]')){
+        return;
+      }
+      else {
+        $('#saveRecord').click();
+      }
+    }
+    else if (e.keyCode == 75) {
+      $('#shortcutsButton').click();
+    }
+    else if (e.keyCode == 86) {
+      backloopStart();
+    }
   })
+}
+
+function backloopStart(){
+  var curTime = player.getCurrentTime();
+  if(loopBool == true){
+    player.seekTo(loopStart);
+    player.playVideo();
+  }
 }
 
 // Helper Functions
@@ -703,3 +698,16 @@ function formatBack(time){
   sec += min * 60
   return sec
 }
+
+
+$(function() {
+  $('#version').change(function() {
+    if ($(this).prop('checked') == true) {
+      $('#version-event').html('Ver: 1.0')
+    }
+    else {
+      $('#version-event').html('Ver: 2.0')
+      window.location= "/practice2/" + video.Id
+    }
+  })
+})

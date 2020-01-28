@@ -3,6 +3,8 @@
 <title>Practice</title>
 {% endblock %}
 {% block script %}
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
 <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename = 'css/jquery.nstSlider.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename = 'jquery.nstSlider.js') }}"></script>
@@ -14,7 +16,7 @@ var vid_loops = {{vid_loops|tojson}};
 {% endblock %}
 {% block css %}
 .ranges{
-  color: rgb(255, 255, 102);
+  color: rgb(80, 191, 230);
   font-weight: bold;
   width: 50;
 }
@@ -114,18 +116,18 @@ ion-icon {
 }
 #progress-bar .ui-slider-range {
   /*background: #4285F4;*/
-  background: rgb(255, 255, 102);
+  background: rgb(80, 191, 230);
 }
 #progress-bar .ui-slider-handle {
   /*border-color: #4285F4;*/
-  border-color: rgb(255, 255, 102);
+  border-color: rgb(80, 191, 230);
 }
 .nstSlider{
   width: 100%;
   height: 33px;
   border-radius: 15px;
-  background: rgb(255, 255, 102, 0.3);
-  border: 2px solid rgb(255, 255, 102);
+  background: rgb(80, 191, 230, 0.3);
+  border: 2px solid rgb(80, 191, 230);
 }
 .nstSlider .bar{
   height: 13px;
@@ -174,6 +176,26 @@ body{
 input[type="text"], textarea {
   background-color : #333;
 }
+.textbold {
+  font-weight: bold;
+}
+
+.btn.btn-primary {
+  background: rgb(80, 191, 230, 0.3);
+  border: 2px solid rgb(80, 191, 230);
+}
+.btn.btn-primary:hover {
+  background: rgb(80, 191, 230, 0.8);
+  border: 2px solid rgb(80, 191, 230);
+}
+
+.btn.btn-primary[disabled] {
+  background: rgb(80, 191, 230, 0.3);
+  border: 2px solid rgb(80, 191, 230);
+}
+#version-event {
+  color: white;
+}
 {% endblock %}
 {% block heading %}
 <!-- <div class='row'>
@@ -193,6 +215,7 @@ input[type="text"], textarea {
 <!-- <h5 id='title'></h5> -->
 {% endblock %}
 {% block content %}
+<div id='versionName'></div>
 <div class="row">
   <div class="col-md-11">
 
@@ -204,34 +227,89 @@ input[type="text"], textarea {
 
       <div class="row">
         <div class="col-md-4">
-
-          <button type="button" class="btn btn-light btn-lg fixcontrol" id="play-toggle">
+          <button type="button" class="btn btn-light btn-lg fixcontrol" id="play-toggle" data-toggle='tooltip' data-original-title='Play (space)'>
             <ion-icon name="play"></ion-icon>
           </button>
 
 
-          <button type="button" class="btn btn-light btn-lg fixcontrol" id="mute-toggle">
+          <button type="button" class="btn btn-light btn-lg fixcontrol" id="mute-toggle" data-toggle='tooltip' data-original-title='Mute (m)'>
             <ion-icon name="volume-high"></ion-icon>
           </button>
 
           <a id='timecount'><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
+
+          <input id="version" checked type="checkbox" data-toggle="toggle" data-on="1.0" data-off='2.0'>
+          <span id="version-event">Ver: 1.0</span>
+
         </div>
 
         <div class="col-md-4">
           <a id="limit_warning"></a>
-          <!-- <button type="button" class="btn btn-light btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
-          <button type="button" class="btn btn-light fixbutt btn-lg " id="loop-save">Save</button> -->
-
         </div>
 
-        <div class='col-md-1'></div>
+        <div class='col-md-1'>
+          <span data-toggle='tooltip' data-original-title='Show Shortcuts (k)'>
+            <button type='button' class='btn btn-light btn-lg fixcontrol ml-2' data-toggle='modal' data-target='#keybindModal' id='shortcutsButton'>
+              <i class="fas fa-keyboard fa-lg"></i>
+            </button>
+          </span>
+        </div>
         <div class="col-md-3">
 
-          <button type='button' class='btn btn-light btn-lg mr-2' id='slowdown'>
+          <!-- Modal -->
+          <div class="modal fade" id="keybindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Shortcuts</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class='row'>
+                    <div class="col-md-4">
+                      <div>spacebar</div>
+                      <div>m</div>
+                      <div>k</div>
+                      <div>h, j</div>
+                      <div><-, -></div>
+                      <div>l</div>
+                      <div>s</div>
+                      <div>u, i, o, p</div>
+                      <div>q, w, e, r, t</div>
+                      <div>d</div>
+                      <div>c</div>
+                      <div>v</div>
+                    </div>
+                    <div class="col-md-8 textbold">
+                      <div>Play/Pause</div>
+                      <div>Mute/Unmute</div>
+                      <div>Show Shortcuts</div>
+                      <div>Slow Down/Speed Up</div>
+                      <div>Forward/Backward</div>
+                      <div>Begin/Stop Loop</div>
+                      <div>Save Loop</div>
+                      <div>Adjust Loop Range</div>
+                      <div>Select Loop</div>
+                      <div>Begin/Stop Recording/</div>
+                      <div>Mark Mastered</div>
+                      <div>Go Back to Start of Loop</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type='button' class='btn btn-light btn-lg mr-2' id='slowdown' data-toggle='tooltip' data-original-title='Slow Down (j)'>
             <ion-icon name="rewind"></ion-icon>
           </button>
           <a id='speed'><span>1.00</span></a>
-          <button type='button' class='btn btn-light btn-lg ml-2' id='speedup'>
+          <button type='button' class='btn btn-light btn-lg ml-2' id='speedup' data-toggle='tooltip' data-original-title='Speed Up (k)'>
             <ion-icon name="fastforward"></ion-icon>
           </button>
 
@@ -252,30 +330,27 @@ input[type="text"], textarea {
       </div>
 
       <div class="row">
-        <div class='col-md-5'>
+        <div class='col-md-4'>
           <label for="amount" id='looprangelabel'>Loop Range: </label>
           <input class='ranges' type='text' id="loop-start">
           <span class="ranges"> - </span>
           <input class='ranges' type='text' id="loop-end">
         </div>
-        <div class='col-md-3'>
-          <!-- <a id="limit_warning"></a> -->
-          <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
-          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save">Save</button>
+        <div class='col-md-4'>
+          <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle" data-toggle='tooltip' data-original-title='Begin Loop (l)'>Loop</button>
+          <button type="button" class="btn btn-primary btn-lg " id="loop-restart" data-toggle='tooltip' data-original-title='Go Back to Start of Loop (v)' disabled>Restart</button>
+          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save" data-toggle='tooltip' data-original-title='Save Loop (s)'>Save</button>
         </div>
         <div class='col-md-4'>
           <div id="recordingsList"></div>
         </div>
       </div>
 
-      <!-- <div id="slider-range"></div><br> -->
-
     </div>
   </div>
 
   <div class="col-md-1" id="right-col">
 
-    <!-- <div id='loop_saves'></div> -->
     <div id='tuning'></div>
 
     <!-- Modal -->
@@ -299,21 +374,19 @@ input[type="text"], textarea {
       </div>
     </div>
 
-    <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton'>
+    <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton' data-toggle='tooltip' data-original-title='Begin Recording (d)'>
       <ion-icon name="microphone"></ion-icon>
     </button>
-    <!-- <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='pauseButton' disabled>
-    <ion-icon name="pause"></ion-icon>
-  </button> -->
-  <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='stopButton' disabled>
-    <ion-icon name="square"></ion-icon>
-  </button>
-  <button type='button' class='btn btn-success movebotbot ml-2 mr-2 btn-record' id='saveRecord' disabled>
-    <ion-icon name="checkmark-circle"></ion-icon>
-  </button>
-</div>
+    <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' data-toggle='tooltip' data-original-title='Stop Recording (r)' id='stopButton' disabled>
+      <ion-icon name="square"></ion-icon>
+    </button>
+    <button type='button' class='btn btn-success movebotbot ml-2 mr-2 btn-record' id='saveRecord' disabled data-toggle='tooltip' data-original-title='Mark Mastered (c)'>
+      <ion-icon name="checkmark-circle"></ion-icon>
+    </button>
+  </div>
 
 </div>
+
 {% endblock %}
 
 {% block script2 %}

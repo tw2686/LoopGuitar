@@ -38,6 +38,7 @@ function startRecording() {
 	Disable the record button until we get a success or fail from getUserMedia()
 	*/
 
+	$(recordButton).tooltip('hide');
 	$(recordButton).prop('disabled', true)
 	$(stopButton).prop('disabled', false)
 	$(pauseButton).prop('disabled', false)
@@ -77,7 +78,7 @@ function startRecording() {
 		//start the recording process
 		rec.record()
 
-		console.log("btn-deleteted");
+		// console.log("btn-deleteted");
 
 	}).catch(function(err) {
 		//enable the record button if getUserMedia() fails
@@ -111,6 +112,8 @@ function stopRecording() {
 	$(recordButton).prop('disabled', false)
 	$(stopButton).prop('disabled', true)
 	$(pauseButton).prop('disabled', true)
+
+	$(stopButton).tooltip('hide');
 
 	//reset button just in case the recording is stopped while paused
 	// pauseButton.innerHTML="Pause";
@@ -156,30 +159,41 @@ function createDownloadLink(blob) {
 }
 
 function markMastered(){
+	$(saveButton).tooltip('hide');
 	var new_recording = {
 		Id: video.Id,
 		Name: video.Name
 	}
 	save_mastered(new_recording)
-	$(saveButton).prop('disabled', true);
+	$(saveButton).off('click')
+	// $(saveButton).prop('disabled', true);
+	var progIcon = $('<ion-icon name="pulse">');
+	$(saveButton).empty().append(progIcon)
+	$(saveButton).removeClass('btn-success').addClass('btn-info')
+	$(saveButton).attr('data-original-title', 'Check Progress (t)');
+	$(saveButton).on("click", toProgress);
+}
+
+function toProgress(){
+	window.location= "/progress"
 }
 
 var save_mastered = function(new_mastered){
-  var data_to_save = new_mastered
-  $.ajax({
-    type: "POST",
-    url: "mark_mastered",
-    dataType : "json",
-    contentType: "application/json; charset=utf-8",
-    data : JSON.stringify(data_to_save),
-    success: function(result){
-      mastered = result["mastered"]
-    },
-    error: function(request, status, error){
-      console.log("Error");
-      console.log(request)
-      console.log(status)
-      console.log(error)
-    }
-  });
+	var data_to_save = new_mastered
+	$.ajax({
+		type: "POST",
+		url: "mark_mastered",
+		dataType : "json",
+		contentType: "application/json; charset=utf-8",
+		data : JSON.stringify(data_to_save),
+		success: function(result){
+			mastered = result["mastered"]
+		},
+		error: function(request, status, error){
+			console.log("Error");
+			console.log(request)
+			console.log(status)
+			console.log(error)
+		}
+	});
 }
