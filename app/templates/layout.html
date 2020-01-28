@@ -1,6 +1,6 @@
 <!-- Tsun Ting (James) Wong - tw2686
 COMS 4170: User Interface Design
-Homework 12 -->
+Final Project -->
 
 <!-- <!DOCTYPE html> -->
 <html>
@@ -61,7 +61,7 @@ Homework 12 -->
       <div id="navbarNavAltMarkup">
         <ul class="nav navbar-nav navbar-right">
           <li><a class="nav-item nav-link" href="/">Home</a></li>
-          <li><a class="nav-item nav-link" href="/search">Explore</a></li>
+          <li><a class="nav-item nav-link" href="/search">Search</a></li>
           <li><a class="nav-item nav-link" href="/practice">Practice</a></li>
           <li><a class="nav-item nav-link" href="/add_item">Import Video</a></li>
           <li><a class="nav-item nav-link" href="/progress">Progress</a></li>
@@ -70,47 +70,14 @@ Homework 12 -->
     </div>
   </nav>
 
-  <!-- <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-  <div class="navbar-header">
-  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-  <span class="icon-bar"></span>
-  <span class="icon-bar"></span>
-  <span class="icon-bar"></span>
-</button>
-<a class="navbar-brand" href="#">Logo</a>
-</div>
-<div class="collapse navbar-collapse" id="myNavbar">
-<ul class="nav navbar-nav navbar-right">
-<li><a href="#home">HOME</a></li>
-<li><a href="#band">BAND</a></li>
-<li><a href="#tour">TOUR</a></li>
-<li><a href="#contact">CONTACT</a></li>
-<li class="dropdown">
-<a class="dropdown-toggle" data-toggle="dropdown" href="#">MORE
-<span class="caret"></span>
-</a>
-<ul class="dropdown-menu">
-<li><a href="#">Merchandise</a></li>
-<li><a href="#">Extras</a></li>
-<li><a href="#">Media</a></li>
-</ul>
-</li>
-<li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>
-</ul>
-</div>
-</div>
-</nav> -->
+  {% block cover %}{% endblock %}
+  <div class="container" id="layoutcontainer">
+    <br>
+    {% block heading %}{% endblock %}
+    {% block content %}
 
-
-{% block cover %}{% endblock %}
-<div class="container" id="layoutcontainer">
-  <br>
-  {% block heading %}{% endblock %}
-  {% block content %}
-
-  {% endblock %}
-</div>
-{% block script2 %}{% endblock %}
+    {% endblock %}
+  </div>
+  {% block script2 %}{% endblock %}
 </body>
 </html>

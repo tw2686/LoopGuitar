@@ -1,6 +1,6 @@
 // Tsun Ting (James) Wong - tw2686
 // COMS 4170: User Interface Design
-// Homework 12
+// Final Project
 
 // Check for valid inputs
 var check_input = function(){
@@ -22,6 +22,7 @@ var check_input = function(){
   display_videos(relevant)
 }
 
+// Display video images in explore page
 var display_videos = function(videos){
   var grid = $("<div>")
   var k = 0

@@ -18,15 +18,8 @@ var vid_loops = {{vid_loops|tojson}};
 .ranges{
   color: rgb(80, 191, 230);
   font-weight: bold;
-  width: 50;
-}
-.loop-active{
-  background-color: #3CE0AF;
-  border-color: #3CE0AF;
-}
-.loop-active:hover {
-  background-color: #3CE0AF;
-  border-color: #3CE0AF;
+  width: 60;
+  font-size: 20;
 }
 .lb-wrap {
   position: relative;
@@ -63,7 +56,7 @@ var vid_loops = {{vid_loops|tojson}};
   opacity: 1;
 }
 .btn-xlarge {
-  width: 220px;
+  width: 249px;
   height: 80px;
   padding: 10px 10px;
   font-size: 22px;
@@ -85,7 +78,7 @@ var vid_loops = {{vid_loops|tojson}};
   border: 2px red solid;
 }
 .fixbutt {
-  width: 80px;
+  width: 90px;
   height: 50px;
 }
 .fixcontrol {
@@ -124,20 +117,20 @@ ion-icon {
 }
 .nstSlider{
   width: 100%;
-  height: 33px;
-  border-radius: 15px;
+  height: 38px;
+  border-radius: 20px;
   background: rgb(80, 191, 230, 0.3);
   border: 2px solid rgb(80, 191, 230);
 }
 .nstSlider .bar{
-  height: 13px;
-  top: 30%;
+  height: 16px;
+  top: 25%;
 }
 .nstSlider .leftGrip,
 .nstSlider .rightGrip {
-  border-radius: 15px;
-  height: 30px;
-  width: 30px;
+  border-radius: 20px;
+  height: 35px;
+  width: 35px;
 }
 .nstSlider .leftGrip.gripHighlighted,
 .nstSlider .rightGrip.gripHighlighted {
@@ -145,10 +138,11 @@ ion-icon {
 }
 .nstSlider .highlightPanel{
   background: #3CE0AF;
-  height: 30px;
+  height: 35px;
   border-radius: 15px;
 }
 #timecount, #speed, #looprangelabel{
+  font-size: 25;
   color: white
 }
 .container {
@@ -179,7 +173,6 @@ input[type="text"], textarea {
 .textbold {
   font-weight: bold;
 }
-
 .btn.btn-primary {
   background: rgb(80, 191, 230, 0.3);
   border: 2px solid rgb(80, 191, 230);
@@ -196,162 +189,167 @@ input[type="text"], textarea {
 #version-event {
   color: white;
 }
+#controls{
+  width: 100%;
+}
+#checkProgress{
+  width: 200;
+}
+#labelSections{
+  font-size: 25;
+  color: white;
+}
+.btn.btn-primary.loop-active{
+  background-color: rgb(60, 224, 175, 0.6);
+  border: 2px solid rgb(60, 224, 175);
+}
+.btn.btn-primary.loop-active:hover {
+  background-color: rgb(60, 224, 175, 0.8);
+  border: 2px solid rgb(60, 224, 175);
+}
 {% endblock %}
 {% block heading %}
-<!-- <div class='row'>
-<div class='col-md-3'>
-<p class='text-center subhead p_s'>Song:</p>
-<h5 class='text-center' id='song_name'></h5>
-</div>
-<div class='col-md-3'>
-<p class='text-center subhead p_s'>Original Artist:</p>
-<h5 class='text-center' id='o_artist'></h5>
-</div>
-<div class='col-md-3'>
-<p class='text-center subhead p_s'>Cover Artist:</p>
-<h5 class='text-center' id='c_artist'></h5>
-</div>
-</div> -->
-<!-- <h5 id='title'></h5> -->
 {% endblock %}
 {% block content %}
-<div id='versionName'></div>
 <div class="row">
-  <div class="col-md-11">
+  <!-- <div class="col-md-11"> -->
+  <div id="video-placeholder"></div>
+</div>
 
-    <div id="video-placeholder"></div>
+<div class="row">
+  <div id="controls">
 
-    <div id="controls">
+    <div class="mb-2" id='progress-bar'></div>
 
-      <div class="mb-2" id='progress-bar'></div>
+    <div class="row">
+      <div class="col-md-4">
+        <button type="button" class="btn btn-light btn-lg fixcontrol" id="play-toggle" data-toggle='tooltip' data-original-title='Play (space)'>
+          <ion-icon name="play"></ion-icon>
+        </button>
 
-      <div class="row">
-        <div class="col-md-4">
-          <button type="button" class="btn btn-light btn-lg fixcontrol" id="play-toggle" data-toggle='tooltip' data-original-title='Play (space)'>
-            <ion-icon name="play"></ion-icon>
+
+        <button type="button" class="btn btn-light btn-lg fixcontrol" id="mute-toggle" data-toggle='tooltip' data-original-title='Mute (m)'>
+          <ion-icon name="volume-high"></ion-icon>
+        </button>
+
+        <a id='timecount'><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
+
+      </div>
+
+      <div class="col-md-4">
+        <a id="limit_warning"></a>
+      </div>
+
+      <div class='col-md-1'>
+        <span data-toggle='tooltip' data-original-title='Show Shortcuts (k)'>
+          <button type='button' class='btn btn-light btn-lg fixcontrol ml-2' data-toggle='modal' data-target='#keybindModal' id='shortcutsButton'>
+            <i class="fas fa-keyboard fa-lg"></i>
           </button>
+        </span>
 
-
-          <button type="button" class="btn btn-light btn-lg fixcontrol" id="mute-toggle" data-toggle='tooltip' data-original-title='Mute (m)'>
-            <ion-icon name="volume-high"></ion-icon>
-          </button>
-
-          <a id='timecount'><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
-
-          <input id="version" checked type="checkbox" data-toggle="toggle" data-on="1.0" data-off='2.0'>
-          <span id="version-event">Ver: 1.0</span>
-
-        </div>
-
-        <div class="col-md-4">
-          <a id="limit_warning"></a>
-        </div>
-
-        <div class='col-md-1'>
-          <span data-toggle='tooltip' data-original-title='Show Shortcuts (k)'>
-            <button type='button' class='btn btn-light btn-lg fixcontrol ml-2' data-toggle='modal' data-target='#keybindModal' id='shortcutsButton'>
-              <i class="fas fa-keyboard fa-lg"></i>
-            </button>
-          </span>
-        </div>
-        <div class="col-md-3">
-
-          <!-- Modal -->
-          <div class="modal fade" id="keybindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Shortcuts</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class='row'>
-                    <div class="col-md-4">
-                      <div>spacebar</div>
-                      <div>m</div>
-                      <div>k</div>
-                      <div>h, j</div>
-                      <div><-, -></div>
-                      <div>l</div>
-                      <div>s</div>
-                      <div>u, i, o, p</div>
-                      <div>q, w, e, r, t</div>
-                      <div>d</div>
-                      <div>c</div>
-                      <div>v</div>
-                    </div>
-                    <div class="col-md-8 textbold">
-                      <div>Play/Pause</div>
-                      <div>Mute/Unmute</div>
-                      <div>Show Shortcuts</div>
-                      <div>Slow Down/Speed Up</div>
-                      <div>Forward/Backward</div>
-                      <div>Begin/Stop Loop</div>
-                      <div>Save Loop</div>
-                      <div>Adjust Loop Range</div>
-                      <div>Select Loop</div>
-                      <div>Begin/Stop Recording/</div>
-                      <div>Mark Mastered</div>
-                      <div>Go Back to Start of Loop</div>
-                    </div>
+        <!-- Modal -->
+        <div class="modal fade" id="keybindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Shortcuts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class='row'>
+                  <div class="col-md-4">
+                    <div>spacebar</div>
+                    <div>m</div>
+                    <div>k</div>
+                    <div>h, j</div>
+                    <div><-, -></div>
+                    <div>l</div>
+                    <div>s</div>
+                    <div>u, i, o, p</div>
+                    <div>q, w, e, r, t</div>
+                    <div>v</div>
+                    <div>c</div>
+                  </div>
+                  <div class="col-md-8 textbold">
+                    <div>Play/Pause</div>
+                    <div>Mute/Unmute</div>
+                    <div>Show Shortcuts</div>
+                    <div>Slow Down/Speed Up</div>
+                    <div>Forward/Backward</div>
+                    <div>Begin/Stop Loop</div>
+                    <div>Save Loop</div>
+                    <div>Adjust Loop Range</div>
+                    <div>Select Loop</div>
+                    <div>Go Back to Start of Loop</div>
+                    <div>Go to Progress Page</div>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
-
-          <button type='button' class='btn btn-light btn-lg mr-2' id='slowdown' data-toggle='tooltip' data-original-title='Slow Down (j)'>
-            <ion-icon name="rewind"></ion-icon>
-          </button>
-          <a id='speed'><span>1.00</span></a>
-          <button type='button' class='btn btn-light btn-lg ml-2' id='speedup' data-toggle='tooltip' data-original-title='Speed Up (k)'>
-            <ion-icon name="fastforward"></ion-icon>
-          </button>
-
         </div>
       </div>
 
-      <div class='row'>
-
-        <div id='loop_saves'></div>
-
-        <div class="nstSlider mt-2 mb-3" data-range_min="0" data-range_max="100" data-cur_min="10" data-cur_max="90">
-          <div class="highlightPanel"></div>
-          <div class="bar"></div>
-          <div class="leftGrip"></div>
-          <div class="rightGrip"></div>
-        </div>
+      <div class="col-md-3">
+        <button type='button' class='btn btn-light btn-lg mr-2' id='slowdown' data-toggle='tooltip' data-original-title='Slow Down (h)'>
+          <ion-icon name="rewind"></ion-icon>
+        </button>
+        <a id='speed'><span>1.00</span></a>
+        <button type='button' class='btn btn-light btn-lg' id='speedup' data-toggle='tooltip' data-original-title='Speed Up (j)'>
+          <ion-icon name="fastforward"></ion-icon>
+        </button>
 
       </div>
+    </div>
+    <br>
+    <span id='labelSections'>Create Loops:</span>
 
-      <div class="row">
-        <div class='col-md-4'>
-          <label for="amount" id='looprangelabel'>Loop Range: </label>
-          <input class='ranges' type='text' id="loop-start">
-          <span class="ranges"> - </span>
-          <input class='ranges' type='text' id="loop-end">
-        </div>
-        <div class='col-md-4'>
+    <div class="row mt-2">
+      <div class='col-md-4'>
+        <label for="amount" class='mr-3' id='looprangelabel'>Loop Range: </label>
+        <input class='ranges' type='text' id="loop-start">
+        <span class="ranges"> - </span>
+        <input class='ranges' type='text' id="loop-end">
+      </div>
+      <div class='col-md-6'>
+        <div class='ml-5'>
           <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle" data-toggle='tooltip' data-original-title='Begin Loop (l)'>Loop</button>
-          <button type="button" class="btn btn-primary btn-lg " id="loop-restart" data-toggle='tooltip' data-original-title='Go Back to Start of Loop (v)' disabled>Restart</button>
-          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save" data-toggle='tooltip' data-original-title='Save Loop (s)'>Save</button>
+          <button type="button" class="btn btn-primary btn-lg" id="loop-restart" data-toggle='tooltip' data-original-title='Go Back to Start of Loop (v)' disabled>Restart</button>
+          <button type="button" class="btn btn-primary fixbutt btn-lg" id="loop-save" data-toggle='tooltip' data-original-title='Save Loop (s)'>Save</button>
         </div>
-        <div class='col-md-4'>
-          <div id="recordingsList"></div>
-        </div>
+      </div>
+      <div class='col-md-2'>
+
+        <button type='button' class='btn btn-primary btn-lg loopButts' id='checkProgress' data-toggle='tooltip' data-original-title='Go to Progress (c)'>
+          Check Progress
+        </button>
+
+        <div id="recordingsList"></div>
       </div>
 
     </div>
-  </div>
 
-  <div class="col-md-1" id="right-col">
+    <div class='row'>
 
-    <div id='tuning'></div>
+      <div class="nstSlider mt-2 mb-2" data-range_min="0" data-range_max="100" data-cur_min="10" data-cur_max="50">
+        <div class="highlightPanel"></div>
+        <div class="bar"></div>
+        <div class="leftGrip" id='leftGrip'></div>
+        <div class="rightGrip" id='rightGrip'></div>
+      </div>
+
+    </div>
+    <br>
+    <span id='labelSections'>Play Loops:</span>
+
+    <div class='row'>
+      <div id='loop_saves'></div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -368,23 +366,13 @@ input[type="text"], textarea {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id='renamesubmit'>Save changes</button>
+            <button type="button" class="btn btn-info" id='renamesubmit'>Save changes</button>
           </div>
         </div>
       </div>
     </div>
 
-    <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton' data-toggle='tooltip' data-original-title='Begin Recording (d)'>
-      <ion-icon name="microphone"></ion-icon>
-    </button>
-    <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' data-toggle='tooltip' data-original-title='Stop Recording (r)' id='stopButton' disabled>
-      <ion-icon name="square"></ion-icon>
-    </button>
-    <button type='button' class='btn btn-success movebotbot ml-2 mr-2 btn-record' id='saveRecord' disabled data-toggle='tooltip' data-original-title='Mark Mastered (c)'>
-      <ion-icon name="checkmark-circle"></ion-icon>
-    </button>
   </div>
-
 </div>
 
 {% endblock %}

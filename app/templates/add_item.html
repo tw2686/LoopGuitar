@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block head %}
-<title>Add Video</title>
+<title>Import Video</title>
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename = 'add_item.js') }}"></script>
@@ -11,6 +11,16 @@ var videos = {{videos|tojson}};
 {% block css %}
 label{
   color: white;
+}
+.move{
+  position: absolute;
+  right: 165;
+}
+.mover{
+  position: absolute;
+  font-size: large;
+  bottom: 430;
+  right: 270;
 }
 {% endblock %}
 {% block heading %}
@@ -27,22 +37,22 @@ label{
     <div class="form-group col-md-6">
       <label for="headquarters">Video URL</label>
       <input type="text" class="form-control" id="url" placeholder="https://www.youtube.com/watch?v=<videoId>">
+      </div>
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="headquarters">Artist</label>
-      <input type="text" class="form-control" id="artist" placeholder="Artist">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="headquarters">Artist</label>
+        <input type="text" class="form-control" id="artist" placeholder="Artist">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="headquarters">Tuning (Optional)</label>
+        <input type="text" class="form-control" id="tuning" placeholder="EADGBE">
+      </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="headquarters">Tuning (Optional)</label>
-      <input type="text" class="form-control" id="tuning" placeholder="EADGBE">
+    <div class='row'>
+      <button type="button" class="btn btn-primary btn-lg move" id="submit">Import</button>
+      <a class='mover' id="record_link"></a>
     </div>
-  </div>
-  <div>
-    <button type="button" class="btn btn-primary mr-5" id="submit">Import</button>
-    <a id="record_link"></a>
-  </div>
-</form>
+  </form>
 
-{% endblock %}
+  {% endblock %}

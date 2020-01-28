@@ -1,7 +1,9 @@
 // Tsun Ting (James) Wong - tw2686
 // COMS 4170: User Interface Design
-// Homework 14
+// Final Project
 
+// Gets all video names and time spent data for objects
+// Creates charts using API
 function updateChart(){
   var videoNames = []
   var videoTimes = []
@@ -11,14 +13,19 @@ function updateChart(){
       if (k == "Name"){
         videoNames.push(v)
       }
-      else if (k == "TimeSpent") {
-        sum += v
-        videoTimes.push(v)
+      else if (k == "TimeSpent" && v != 0) {
+        min = v/60
+        sum += min
+        console.log(min.toFixed(2))
+        videoTimes.push(parseFloat(min.toFixed(2)))
+      }
+      else if (k == "TimeSpent" && v == 0) {
+        videoNames.pop()
       }
     })
   })
   videoNames.push("Total")
-  videoTimes.push(sum)
+  videoTimes.push(parseFloat(sum.toFixed(2)))
 
   Highcharts.theme = {
     colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
@@ -219,7 +226,7 @@ function updateChart(){
     maskColor: 'rgba(255,255,255,0.3)'
   };
 
-  // Apply the theme
+  // Apply the dark theme
   Highcharts.setOptions(Highcharts.theme);
 
   Highcharts.chart('chart', {
@@ -268,16 +275,7 @@ function updateChart(){
   });
 }
 
-function updateMastered(){
-  $.each(mastered, function(i, obj){
-    if (!$.isEmptyObject(obj)) {
-      $("#mastered").append(obj.Id + ". " + obj.Name + "<br><br>")
-    }
-  })
-}
-
 // Wait for html to be ready
 $(document).ready(function(){
   updateChart();
-  updateMastered();
 })

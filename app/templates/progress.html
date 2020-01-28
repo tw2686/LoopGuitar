@@ -3,8 +3,18 @@
 <title>Progress</title>
 {% endblock %}
 {% block script %}
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<!-- Additional files for the Highslide popup effect -->
+<script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
+<script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="https://www.highcharts.com/media/com_demo/css/highslide.css" />
+
 <script type="text/javascript" src="{{ url_for('static', filename = 'progress.js') }}"></script>
 {% endblock %}
 {% block videos %}
@@ -26,16 +36,8 @@ var mastered = {{mastered|tojson}};
 {% block heading %}
 {% endblock %}
 {% block content %}
-
 <div class='row'>
-  <div class='col-md-3'>
-    <h2>Songs Mastered</h2>
-    <div id='mastered'></div>
-  </div>
-  <div class='col-md-9'>
-    <h2>Progress</h2>
-    <div id="chart"></div>
-  </div>
+  <h2>Progress</h2>
+  <div id="chart"></div>
 </div>
-
 {% endblock %}

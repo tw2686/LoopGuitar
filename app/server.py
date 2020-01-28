@@ -1,7 +1,7 @@
 """
 Tsun Ting (James) Wong - tw2686
 COMS 4170: User Interface Design
-Homework 12
+Final Project
 """
 
 from flask import Flask
@@ -11,12 +11,12 @@ from database import videos
 app = Flask(__name__)
 
 
-current_id = 33
+current_id = 35
 
 
 loop_saves = [{}] * current_id
-loop_saves[0] = {
-    'Id': 1,
+loop_saves[1] = {
+    'Id': 2,
     'L1': ("Loop1", 60, 73),
     'L2': ("Loop2", 108, 121),
     'L3': ("Loop3", 135, 147)
@@ -80,21 +80,9 @@ def practice2(vid_id=None):
     except:
         return render_template('practice.html', videos=videos, video=videos[vid_id - 1], vid_loops=None)
 
-@app.route('/practice2')
-@app.route('/practice2/<int:vid_id>')
-def practice(vid_id=None):
-    if not vid_id:
-        return render_template('practice2.html', videos=videos, video=videos[0], vid_loops=loop_saves[0])
-    try:
-        loop_records = loop_saves[vid_id - 1]
-        return render_template('practice2.html', videos=videos, video=videos[vid_id - 1], vid_loops=loop_records)
-    except:
-        return render_template('practice2.html', videos=videos, video=videos[vid_id - 1], vid_loops=None)
-
 
 @app.route('/save_loop', methods=['GET', 'POST'])
 @app.route('/practice/save_loop', methods=['GET', 'POST'])
-@app.route('/practice2/save_loop', methods=['GET', 'POST'])
 def save_loop():
     global loop_saves
 
@@ -105,13 +93,11 @@ def save_loop():
         vid_loops[k] = v
     loop_saves[id - 1] = vid_loops
 
-
     return jsonify(new_vid_loops=loop_saves[id - 1])
 
 
 @app.route('/del_loop', methods=['GET', 'POST'])
 @app.route('/practice/del_loop', methods=['GET', 'POST'])
-@app.route('/practice2/del_loop', methods=['GET', 'POST'])
 def del_loop():
     global loop_saves
 
@@ -133,24 +119,8 @@ def progress():
     return render_template('progress.html', videos=videos, mastered=mastered)
 
 
-@app.route('/mark_mastered', methods=['GET', 'POST'])
-@app.route('/practice/mark_mastered', methods=['GET', 'POST'])
-@app.route('/practice2/mark_mastered', methods=['GET', 'POST'])
-def mark_mastered():
-    global recordings, mastered
-
-    json_data = request.get_json()
-    vid_id = json_data['Id']
-    updateMastered = {}
-    for k, v in json_data.items():
-        updateMastered[k] = v
-    mastered[vid_id-1] = updateMastered
-    return jsonify(mastered=mastered)
-
-
 @app.route('/save_time', methods=['GET', 'POST'])
 @app.route('/practice/save_time', methods=['GET', 'POST'])
-@app.route('/practice2/save_time', methods=['GET', 'POST'])
 def save_time():
     global videos
 

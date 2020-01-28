@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block head %}
-<title>Explore Videos</title>
+<title>Search Videos</title>
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename = 'search.js') }}"></script>
@@ -10,7 +10,7 @@ var videos = {{videos|tojson}};
 var input = {{input|tojson}};
 {% endblock %}
 {% block heading %}
-<h1> Explore </h1>
+<h1> Search </h1>
 {% endblock %}
 {% block content %}
 <div class="nav nav-justified navbar-nav">

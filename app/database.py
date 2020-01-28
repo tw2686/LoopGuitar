@@ -1,16 +1,16 @@
 videos = [
     {
         "Id": 1,
-        "Name": "Coldplay - Everglow - Fingerstyle Guitar Cover By James Bartholomew",
-        "URL": "V3cEhbO9Kv8",
-        "Artist": "James Bartholomew",
+        "Name": "7 Years - Solo Fingerstyle Guitar Version",
+        "URL": "EAsm2CBkMoo",
+        "Artist": "Gareth Evans",
         "Tuning": "EADGBE",
         "TimeSpent": 0
     },
     {
         "Id": 2,
-        "Name": "Lukas Graham - 7 Years - Fingerstyle Guitar Cover By James Bartholomew",
-        "URL": "gEyqWxq5LNk",
+        "Name": "Coldplay - Everglow - Fingerstyle Guitar Cover By James Bartholomew",
+        "URL": "V3cEhbO9Kv8",
         "Artist": "James Bartholomew",
         "Tuning": "EADGBE",
         "TimeSpent": 0
@@ -225,9 +225,9 @@ videos = [
     },
     {
         "Id": 29,
-        "Name": "7 Years - Solo Fingerstyle Guitar Version",
-        "URL": "EAsm2CBkMoo",
-        "Artist": "Gareth Evans",
+        "Name": "Lukas Graham - 7 Years - Fingerstyle Guitar Cover By James Bartholomew",
+        "URL": "gEyqWxq5LNk",
+        "Artist": "James Bartholomew",
         "Tuning": "EADGBE",
         "TimeSpent": 0
     },
@@ -262,5 +262,22 @@ videos = [
         "Artist": "Gareth Evans",
         "Tuning": "NA",
         "TimeSpent": 0
+    },
+    {
+        "Id": 34,
+        "Name": "Rewrite The Stars - The Greatest Showman (Fingerstyle Guitar Cover)",
+        "URL": "8d66coFomaQ",
+        "Artist": "Guus Music",
+        "Tuning": "NA",
+        "TimeSpent": 0
+    },
+    {
+        "Id": 35,
+        "Name": "(Tears For Fears) Everybody Wants To Rule The World",
+        "URL": "K7O25wmWCnE",
+        "Artist": "Gabriella Quevedo",
+        "Tuning": "NA",
+        "TimeSpent": 0
     }
+
 ]

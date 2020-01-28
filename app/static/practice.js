@@ -1,15 +1,14 @@
 // Tsun Ting (James) Wong - tw2686
 // COMS 4170: User Interface Design
-// Homework 12
+// Final Project
 
-
+// Link YouTube iframe API
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-var videoId = video.URL
-
+// Initialize relavant variables
 var player, startTime,
 time_update_interval = 0;
 
@@ -22,8 +21,7 @@ var loop_id = 1;
 
 var speedList;
 
-$('#title').append(video.Name)
-
+// Calculate time spent on page whenever it is exited
 window.onbeforeunload = function(){
   var d = new Date();
   var endTime = d.getTime()
@@ -57,13 +55,12 @@ var save_time = function(timeobj){
   });
 }
 
-
+// Set YouTube API properties
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('video-placeholder', {
     width: '100%',
-    // height: '480',
-    height: '60%',
-    videoId: videoId,
+    height: '45%',
+    videoId: video.URL,
     playerVars: {
       color: 'white',
       controls: 0
@@ -75,23 +72,25 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-
-// Initialize Everything
+// Initialize all video/loop related features
 function initialize(){
   var d = new Date();
   startTime = d.getTime()
-  // Update the controls on load
+
   updateTimerDisplay();
   updateProgressBar();
   updateSlideBar();
   initSpeeds();
   initializeLoops();
   bindKeyboardShorts();
+  initInputRanges();
 
+  // Initialize Tooltips
   $(function () {
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'})
   })
 
+  // Hide Navbar
   $('.navbar').hide()
   $(document).on('mousemove', function(e) {
     if (e.pageY < 10) {
@@ -104,39 +103,31 @@ function initialize(){
   if (video.Tuning != "NA") {
     $('#tuning').append(video.Tuning)
   }
+
   // Clear any old interval.
   clearInterval(time_update_interval);
 
-  // loopStart interval to update elapsed time display and
-  // the elapsed part of the progress bar every second.
+  // Update relavant functions at each time interval
   time_update_interval = setInterval(function () {
     updateTimerDisplay();
     updateProgressBar();
     checkForLoop(loopStart, loopEnd);
-
   }, 1000);
-
-  // volume control
-  $('#volume-input').val(Math.round(player.getVolume()));
 }
 
 
-// This function is called by initialize()
+// Updates timer display
 function updateTimerDisplay(){
-  // Update current time text display.
   $('#current-time').text(formatTime( player.getCurrentTime() ));
   $('#duration').text(formatTime( player.getDuration() ));
 }
 
-
-// This function is called by initialize()
+// Updates progress bar
 function updateProgressBar(){
-  // Update the value of our progress bar accordingly.
   $("#progress-bar").slider('value', (player.getCurrentTime() / player.getDuration()) * 100);
 }
 
-
-// Blue progress bar
+// Initialize slider properties of slider bar
 $( function() {
   $( "#progress-bar" ).slider({
     range: 'min',
@@ -150,7 +141,7 @@ $( function() {
   });
 });
 
-// nstSlider
+// Initialize nstSlider properties for loop bar
 $('.nstSlider').nstSlider({
   "left_grip_selector": ".leftGrip",
   "right_grip_selector": ".rightGrip",
@@ -163,8 +154,8 @@ $('.nstSlider').nstSlider({
     }
     $container.find('.leftLabel').text(leftValue);
     $container.find('.rightLabel').text(rightValue);
-    $('#loop-start').val(formatTime(leftValue))
-    $('#loop-end').val(formatTime(rightValue))
+    $('#loop-start').val(formatTime(leftValue));
+    $('#loop-end').val(formatTime(rightValue));
   },
   "highlight": {
     "grip_class": "gripHighlighted",
@@ -172,12 +163,14 @@ $('.nstSlider').nstSlider({
   }
 });
 
-// Update slide range bar at the start
+
+// Updates loop range min and max
 function updateSlideBar(){
   $('.nstSlider').nstSlider('set_range', 0, player.getDuration());
   $('.nstSlider').nstSlider('refresh');
 }
 
+// Updates loop range left and right grips based on range input values
 function updateSliderRange(){
   var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
   var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
@@ -188,23 +181,25 @@ function updateSliderRange(){
   }
 }
 
-$("#loop-start").keypress(function(e) {
-  if (e.which == 13) {
-    event.preventDefault();
-    updateSliderRange();
-  }
-});
+  // Call update slider if input loop-start/end is entered
+function initInputRanges(){
+  $("#loop-start, #loop-end").focus(function(){
+    $(document).unbind('keydown');
+  }).keypress(function(e) {
+    if (e.which == 13) {
+      e.preventDefault();
+      updateSliderRange();
+    }
+  }).blur(function(){
+    bindKeyboardShorts();
+  });
 
-$("#loop-end").keypress(function(e) {
-  if (e.which == 13) {
-    event.preventDefault();
-    updateSliderRange();
-  }
-});
+}
 
+// Initalize Loop restart
 $('#loop-restart').on('click', backloopStart);
 
-// initialize loop toggle click event
+// Initialize loop toggle click event
 $('#loop-toggle').on('click', function () {
   var stopIcon = $("<ion-icon name='square'></ion-icon>");
   $('#limit_warning').empty();
@@ -242,7 +237,7 @@ $('#loop-toggle').on('click', function () {
 });
 
 
-// check for loop end to repeat
+// Checks for loop end to replay loop
 function checkForLoop(loopStart, loopEnd){
   var curTime = player.getCurrentTime();
   if(loopBool == true){
@@ -255,7 +250,7 @@ function checkForLoop(loopStart, loopEnd){
 }
 
 
-// update the loops
+// Updates the display of all loops
 var update_loops = function(vid_loops){
   loopBool = false;
   toggle = false;
@@ -265,7 +260,6 @@ var update_loops = function(vid_loops){
   $('#loop-toggle').removeClass('loop-active').text('Loop');
 
   $("#loop_saves").empty();
-  $("#loop_saves2").empty();
 
   var keybinds = ['(q)', '(w)', '(e)', '(r)', '(t)']
   var keyI = 0;
@@ -293,7 +287,7 @@ var update_loops = function(vid_loops){
       })
       $(loopDiv).append(del_but).append(edit_but);
       var loopButton = $("<button type='button' class='btn btn-primary btn-xlarge m-2 loopButts' data-toggle='tooltip'>");
-      $(loopButton).attr('id', k)
+      $(loopButton).attr('id', loop_name)
       $(loopButton).attr('data-original-title', k + ' ' + keybinds[keyI]).tooltip({trigger: 'hover'})
       keyI += 1;
 
@@ -339,7 +333,6 @@ var update_loops = function(vid_loops){
 
       $(loopDiv).append(loopButton)
       $("#loop_saves").append(loopDiv);
-      // $("#loop_saves2").append(loopDiv);
     }
   })
   $('#myModal').on('show.bs.modal', function (event) {
@@ -361,14 +354,14 @@ var update_loops = function(vid_loops){
   })
 }
 
-// check if loops of video is empty
+// Checks if loops of video from flask is empty
 function initializeLoops(){
   if (!$.isEmptyObject(vid_loops)) {
     update_loops(vid_loops);
   }
 }
 
-// save loop
+// Initialize loop save button
 $('#loop-save').on('click', function () {
   $('#limit_warning').empty();
   var start = $(".nstSlider").nstSlider("get_current_min_value")
@@ -405,7 +398,7 @@ $('#loop-save').on('click', function () {
 });
 
 
-// Save loop to database
+// Save loop to database using AJAX
 var save_loop = function(new_loop){
   var data_to_save = new_loop
   $.ajax({
@@ -427,7 +420,7 @@ var save_loop = function(new_loop){
   });
 }
 
-// delete loop
+// Delete loop from database
 var delete_loop = function(del_info){
   var loop_to_del = del_info
   $.ajax({
@@ -449,7 +442,7 @@ var delete_loop = function(del_info){
   });
 }
 
-// display loop limit reached
+// Display loop limit warning when reached
 var display_limit = function(){
   $('#limit_warning').val("");
   var warning = $("<div class='alert alert-warning alert-dismissible fade show'>");
@@ -462,7 +455,7 @@ var display_limit = function(){
   $('#limit_warning').append(warning);
 }
 
-// Playback
+// Initalize play toggle button
 $('#play-toggle').on('click', function(){
   var play_toggle = $(this);
   play_toggle.empty();
@@ -494,7 +487,7 @@ function onPlayerStateChange(event){
   }
 }
 
-// Sound volume
+// Initialize mute toggle button
 $('#mute-toggle').on('click', function() {
   var mute_toggle = $(this);
   mute_toggle.empty();
@@ -512,12 +505,8 @@ $('#mute-toggle').on('click', function() {
   }
 });
 
-$('#volume-input').on('change', function () {
-  player.setVolume($(this).val());
-});
 
-
-// initialize speeds
+// Initialize speeds controls of video
 function initSpeeds(){
   speedList = player.getAvailablePlaybackRates()
   var index = speedList.indexOf(1)
@@ -539,24 +528,23 @@ function initSpeeds(){
   })
 }
 
-// forward video
+// forward video by one second
 function forward(){
   var curTime = player.getCurrentTime();
   player.seekTo(curTime + 1)
 }
 
-// backward video
+// backward video by one second
 function backward(){
   var curTime = player.getCurrentTime();
   player.seekTo(curTime - 1)
 }
 
-// front slider
+// front slider controls
 function frontSliderFor(){
   var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
   var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
   $(".nstSlider").nstSlider("set_position", slide_s+1, slide_e);
-
 }
 function frontSliderBack(){
   var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
@@ -564,7 +552,7 @@ function frontSliderBack(){
   $(".nstSlider").nstSlider("set_position", slide_s-1, slide_e);
 }
 
-// back slider
+// back slider controls
 function backSliderFor(){
   var slide_s = $(".nstSlider").nstSlider("get_current_min_value")
   var slide_e = $(".nstSlider").nstSlider("get_current_max_value")
@@ -576,103 +564,101 @@ function backSliderBack(){
   $(".nstSlider").nstSlider("set_position", slide_s, slide_e-1);
 }
 
-// quality
-$('#quality').on('change', function () {
-  player.setPlaybackQuality($(this).val());
-});
-
-
-// enable recordings stuff
-$.getScript('/static/record.js');
-
 
 // bind key board short cuts
 function bindKeyboardShorts(){
   $(document).keydown(function(e){
     e.stopImmediatePropagation();
-    e.preventDefault();
     if (e.keyCode == 32){
+      e.preventDefault();
       $("#play-toggle").click();
     }
     else if (e.keyCode == 39) {
+      e.preventDefault();
       forward()
     }
     else if (e.keyCode == 37) {
+      e.preventDefault();
       backward()
     }
     else if (e.keyCode == 77) {
+      e.preventDefault();
       $('#mute-toggle').click();
     }
     else if (e.keyCode == 83) {
+      e.preventDefault();
       $('#loop-save').click();
     }
     else if (e.keyCode == 76) {
+      e.preventDefault();
       $('#loop-toggle').click();
     }
-    else if (e.keyCode == 68) {
-      if ($('#recordButton').is(':disabled')) {
-        $('#stopButton').click();
-      }
-      else {
-        $('#recordButton').click();
-      }
-    }
     else if (e.keyCode == 81) {
+      e.preventDefault();
       if ($('#L1').length != 0)
       $('#L1').click();
     }
     else if (e.keyCode == 87) {
+      e.preventDefault();
       if ($('#L2').length != 0)
       $('#L2').click();
     }
     else if (e.keyCode == 69) {
+      e.preventDefault();
       if ($('#L3').length != 0){
         $('#L3').click();
       }
     }
     else if (e.keyCode == 82) {
+      e.preventDefault();
       if ($('#L4').length != 0)
       $('#L4').click();
     }
     else if (e.keyCode == 84) {
+      e.preventDefault();
       if ($('#L5').length != 0)
       $('#L5').click();
     }
     else if (e.keyCode == 72) {
+      e.preventDefault();
       $('#slowdown').click();
     }
     else if (e.keyCode == 74) {
+      e.preventDefault();
       $('#speedup').click();
     }
     else if (e.keyCode == 85) {
+      e.preventDefault();
       frontSliderBack();
     }
     else if (e.keyCode == 73) {
+      e.preventDefault();
       frontSliderFor();
     }
     else if (e.keyCode == 79) {
+      e.preventDefault();
       backSliderBack();
     }
     else if (e.keyCode == 80) {
+      e.preventDefault();
       backSliderFor();
     }
-    else if (e.keyCode == 67) {
-      if ($("#saveRecord").is('[disabled]')){
-        return;
-      }
-      else {
-        $('#saveRecord').click();
-      }
-    }
     else if (e.keyCode == 75) {
+      e.preventDefault();
       $('#shortcutsButton').click();
     }
     else if (e.keyCode == 86) {
+      e.preventDefault();
       backloopStart();
+    }
+    else if (e.keyCode == 67) {
+      e.preventDefault();
+      $('#checkProgress').click()
     }
   })
 }
 
+// back to beginning of loop
 function backloopStart(){
   var curTime = player.getCurrentTime();
   if(loopBool == true){
@@ -681,7 +667,7 @@ function backloopStart(){
   }
 }
 
-// Helper Functions
+// Format time from js values to min:sec
 function formatTime(time){
   time = Math.round(time);
   var minutes = Math.floor(time / 60),
@@ -690,7 +676,7 @@ function formatTime(time){
   return minutes + ":" + seconds;
 }
 
-
+// Format time from min:sec to js values
 function formatBack(time){
   var parts = time.split(':');
   var min = parseInt(parts[0])
@@ -699,15 +685,7 @@ function formatBack(time){
   return sec
 }
 
-
-$(function() {
-  $('#version').change(function() {
-    if ($(this).prop('checked') == true) {
-      $('#version-event').html('Ver: 1.0')
-    }
-    else {
-      $('#version-event').html('Ver: 2.0')
-      window.location= "/practice2/" + video.Id
-    }
-  })
+// Check progress button click event
+$('#checkProgress').click(function(){
+  window.location = '/progress'
 })

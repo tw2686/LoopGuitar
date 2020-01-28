@@ -1,9 +1,8 @@
 // Tsun Ting (James) Wong - tw2686
 // COMS 4170: User Interface Design
-// Homework 12
+// Final Project
 
-// url = "https://www.youtube.com/watch?v=AwhqwzlZodk"
-
+// Get video id from URL
 function getVideoId(url){
   var video_id = url.split('v=')[1];
   if (video_id == null) {
@@ -16,6 +15,7 @@ function getVideoId(url){
   return video_id
 }
 
+// Check for valid inputs
 var check_input = function(){
   var name = $('#name').val();
   var url = getVideoId($('#url').val());
@@ -115,7 +115,6 @@ var update_names = function(videos){
     source: videoNames
   });
 }
-
 
 // Wait for html to be ready
 $(document).ready(function(){
