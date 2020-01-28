@@ -2,8 +2,33 @@
 {% block head %}
 <title>Learn Guitar Songs</title>
 {% endblock %}
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'index.js') }}"></script>
+{% endblock %}
+{% block css %}
+{% endblock %}
 {% block heading %}
-<h1> Home Page </h1>
+
+<div class="jumbotron d-flex align-self-center align-items-center">
+  <div class="container text-center">
+    <h1 class="cover-heading"> Learn Guitar Songs </h1>
+    <br>
+    <div class="nav nav-justified navbar-nav">
+      <form class="navbar-form navbar-search" role="search">
+        <div class="input-group">
+          <input type="text" class="form-control" id="lookup">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-search btn-primary" id="submit">
+              <span class="glyphicon glyphicon-search"></span>
+              <span class="label-icon">Search</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 {% block content %}
 {% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block head %}
+<title>Progress</title>
+{% endblock %}
+{% block script %}
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'progress.js') }}"></script>
+{% endblock %}
+{% block videos %}
+var videos = {{videos|tojson}};
+{% endblock %}
+{% block css %}
+#chart{
+  width: 100%;
+  height: 80%;
+}
+{% endblock %}
+{% block heading %}
+{% endblock %}
+{% block content %}
+
+<div class='row'>
+  <div class='col-md-3'>
+    <h2>Songs Mastered</h2>
+    <div class='mastered'></div>
+  </div>
+  <div class='col-md-9'>
+    <h2>Progress</h2>
+    <div id="chart"></div>
+  </div>
+</div>
+
+{% endblock %}

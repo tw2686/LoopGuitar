@@ -1,22 +1,18 @@
 {% extends "layout.html" %}
 {% block head %}
-<title>Search Videos</title>
+<title>Explore Videos</title>
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename = 'search.js') }}"></script>
 {% endblock %}
-{% block brands %}
-var brands = {{brands|tojson}};
+{% block videos %}
+var videos = {{videos|tojson}};
+var input = {{input|tojson}};
 {% endblock %}
 {% block heading %}
-<h1> Search Page </h1>
+<h1> Explore </h1>
 {% endblock %}
-{% block item %}
-<h4>
-  Check out most recently added
-  <a href="{{ url_for('item', item_id=recentid) }}">brand</a>
-</h4>
-<br>
+{% block content %}
 <div class="nav nav-justified navbar-nav">
   <form class="navbar-form navbar-search" role="search">
     <div class="input-group">
@@ -30,8 +26,7 @@ var brands = {{brands|tojson}};
     </div>
   </form>
 </div>
-<div id="results"></div>
-{% endblock %}
-{% block content %}
-{{ super() }}
+
+<div id="videos"></div>
+
 {% endblock %}

@@ -3,50 +3,181 @@
 <title>Practice</title>
 {% endblock %}
 {% block script %}
-<script src="https://www.youtube.com/iframe_api"></script>
-<script type="text/javascript" src="{{ url_for('static', filename = 'practice.js') }}"></script>
+<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
 {% endblock %}
-{% block brands %}
+{% block videos %}
+var videos = {{videos|tojson}};
+var video = {{video|tojson}};
+var vid_loops = {{vid_loops|tojson}};
+{% endblock %}
+{% block css %}
+.ranges{
+  color: #f6931f;
+  font-weight: bold;
+  width: 50;
+}
+.loop-active{
+  background-color: #3CE0AF;
+  border-color: #3CE0AF;
+}
+.loop-active:hover {
+  background-color: #3CE0AF;
+  border-color: #3CE0AF;
+}
+.lb-wrap {
+  position: relative;
+  display: inline-block;
+}
+.lb-wrap .btn-circle{
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 2px 2px 2px;
+  line-height: 10px;
+  border-radius: 15px;
+  text-align: center;
+  opacity: 0.5;
+}
+.btn-circle:hover{
+  opacity: 1;
+}
+.btn-xlarge {
+  width: 100px;
+  height: 100px;
+  padding: 10px 10px;
+  font-size: 22px;
+  line=height: normal;
+  border-radius: 8px;
+}
+.btn-record {
+  width: 100px;
+  height: 50px;
+  padding: 10px 10px;
+  font-size: 22px;
+  line=height: normal;
+  border-radius: 8px;
+}
+.smaller{
+  font-size: 14px;
+}
+.bob {
+  border: 2px red solid;
+}
+.fixbutt {
+  width: 80px;
+  height: 50px;
+}
+.fixcontrol {
+  width: 65px;
+  height: 46px;
+}
+.movebottop {
+  position: absolute;
+  bottom: 100px;
+}
+.movebotmid {
+  position: absolute;
+  bottom: 50px;
+}
+.movebotbot {
+  position: absolute;
+  bottom: 0px;
+}
+ion-icon {
+  font-size: 28px;
+}
 {% endblock %}
 {% block heading %}
-<h1> Technical Prototype </h1>
-{% endblock %}
-{% block item %}
-<h4>Video</h4>
-<div id="player"></div>
-<!-- <div id="video-placeholder"></div> -->
-<br>
-<button id="play" type="button">Play</button>
-<button type="button" id="pause">Pause</button>
-<!-- <button type="button" class="btn btn-primary" id="mute-toggle">Mute</button> -->
-<a id="current-time"></a>
-<a> / </a>
-<a id="duration"></a>
-<!-- <i id="mute-toggle" class="material-icons">volume_up</i> -->
-<!-- <input id="volume-input" type="number" max="100" min="0"></input> -->
-
-
-
-<!-- <iframe id="player"
-width="560" height="315"
-src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1" -->
-<!-- src="https://www.youtube.com/embed/gEyqWxq5LNk?enablejsapi=1&version=3&playerapiid=ytplayer" -->
-<!-- frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen allowscriptaccess="always">
-</iframe> -->
-<!-- <button type="button" class="btn btn-primary mr-5" id="stop">Stop</button> -->
-
-<!-- <iframe id="player"
-frameborder="0" allowfullscreen="1"
-allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-title="YouTube video player" width="560" height="315"
-src="https://www.youtube.com/embed/V3cEhbO9Kv8?autoplay=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;disablekeyboard=1&amp;iv_load_policy=3&amp;rel=0&amp;html5=1&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fwww.youloop.io&amp;widgetid=1">
-</iframe> -->
-
-
+<h5 id='title'></h5>
 {% endblock %}
 {% block content %}
-{{ super() }}
+<div class="row">
+  <div class="col-md-10">
+
+    <div id="video-placeholder"></div>
+
+    <div id="controls" class="container">
+      <input type="range" class="custom-range" id="progress-bar" value="0"><br>
+
+      <div class="row">
+        <div class="col-md-5">
+
+          <button type="button" class="btn btn-primary btn-lg fixcontrol" id="play-toggle">
+            <ion-icon name="play"></ion-icon>
+          </button>
+
+
+          <button type="button" class="btn btn-primary btn-lg fixcontrol" id="mute-toggle">
+            <ion-icon name="volume-high"></ion-icon>
+          </button>
+
+          <a><span id="current-time">0:00</span> / <span id="duration">0:00</span></a>
+        </div>
+
+        <div class="col-md-4">
+
+          <button type="button" class="btn btn-primary btn-lg fixbutt loopButts" id="loop-toggle">Loop</button>
+          <button type="button" class="btn btn-primary fixbutt btn-lg " id="loop-save">Save</button>
+
+        </div>
+
+        <div class="col-md-3">
+
+          <button type='button' class='btn btn-primary btn-lg' id='slowdown'>
+            <ion-icon name="rewind"></ion-icon>
+          </button>
+          <a id='speed'>1.00</a>
+          <button type='button' class='btn btn-primary btn-lg' id='speedup'>
+            <ion-icon name="fastforward"></ion-icon>
+          </button>
+
+        </div>
+      </div>
+
+      <br>
+      <div id="slider-range"></div><br>
+
+      <div class="row">
+        <div class='col-md-4'>
+          <label for="amount">Loop Range: </label>
+
+          <input class='ranges' type='text' id="loop-start">
+          <span class="ranges"> - </span>
+          <input class='ranges' type='text' id="loop-end">
+        </div>
+        <div class='col-md-4'>
+          <a id="limit_warning"></a>
+        </div>
+        <div class='col-md-4'>
+          <div id="recordingsList"></div>
+        </div>
+      </div>
+
+      <!-- <button type='button' class='btn btn-primary btn-xlarge m-2 loopButts'>
+      L5
+      <div class='smaller'>0:00 - 0:10</div>
+    </button> -->
+
+  </div>
+</div>
+<div class="col-md-2" id="right-col">
+  <div id='loop_saves'></div>
+  <button type='button' class='btn btn-primary movebottop ml-2 mr-2 mt-2 btn-record' id='recordButton'>
+    <ion-icon name="microphone"></ion-icon>
+  </button>
+  <button type='button' class='btn btn-primary movebotmid ml-2 mr-2 btn-record' id='pauseButton' disabled>
+    <ion-icon name="pause"></ion-icon>
+  </button>
+  <button type='button' class='btn btn-primary movebotbot ml-2 mr-2 btn-record' id='stopButton' disabled>
+    <ion-icon name="square"></ion-icon>
+  </button>
+</div>
+
+</div>
 {% endblock %}
+
 {% block script2 %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'practice.js') }}"></script>
 {% endblock %}

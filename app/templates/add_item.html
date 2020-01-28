@@ -5,82 +5,39 @@
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename = 'add_item.js') }}"></script>
 {% endblock %}
-{% block brands %}
-var brands = {{brands|tojson}};
+{% block videos %}
+var videos = {{videos|tojson}};
 {% endblock %}
 {% block heading %}
-<h1> Add Item Page </h1>
+<h1> Add Video Page </h1>
 {% endblock %}
 {% block content %}
+
 <form>
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="name">Brand Name</label>
-      <input type="text" class="form-control autobrands" id="name" placeholder="Name">
+      <label for="name">Video Name</label>
+      <input type="text" class="form-control autovideos" id="name" placeholder="Name">
     </div>
     <div class="form-group col-md-6">
-      <label for="headquarters">Headquarter Location</label>
-      <input type="text" class="form-control" id="headquarters" placeholder="Location">
+      <label for="headquarters">Video URL</label>
+      <input type="text" class="form-control" id="url" placeholder="https://www.youtube.com/watch?v=<videoId>">
     </div>
   </div>
-
-  <div class="form-group">
-    <label for="ranking">Website URL</label>
-    <input type="text" class="form-control" id="url" placeholder="URL">
-  </div>
-
-  <div class="form-group">
-    <label for="logo">Logo Image URL</label>
-    <input type="text" class="form-control" id="logo" placeholder="URL">
-  </div>
-
-  <div class="form-group">
-    <label for="description">Description</label>
-    <input type="text" class="form-control" id="description" placeholder="Description">
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <label for="founded">Year Founded</label>
-      <input type="text" class="form-control" id="founded" placeholder="Year">
-    </div>
-    <div class="form-group col-md-8">
-      <label for="industry">Related Industries</label>
-      <input type="text" class="form-control" id="industry" placeholder="Items separated by commas">
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-5">
-      <label for="revenue">Revenue</label>
-      <input type="text" class="form-control" id="revenue" placeholder="Revenue in Billions">
-    </div>
-    <div class="form-group col-md-5">
-      <label for="netincome">Net Income</label>
-      <input type="text" class="form-control" id="netincome" placeholder="Net Income in Billions">
-    </div>
-    <div class="form-group col-md-2">
-      <label for="ranking">Ranking</label>
-      <input type="text" class="form-control" id="ranking" placeholder="Ranking">
-    </div>
-  </div>
-
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="percent">Growth Percent</label>
-      <input type="text" class="form-control" id="percent" placeholder="Percentage">
+      <label for="headquarters">Artist</label>
+      <input type="text" class="form-control" id="artist" placeholder="Artist">
     </div>
     <div class="form-group col-md-6">
-      <label for="growth">Growth</label>
-      <input type="text" class="form-control" id="growth" placeholder="Growth in Millions">
+      <label for="headquarters">Tuning(Optional)</label>
+      <input type="text" class="form-control" id="tuning" placeholder="EADGBE">
     </div>
   </div>
-
   <div>
     <button type="button" class="btn btn-primary mr-5" id="submit">Submit</button>
     <a id="record_link"></a>
   </div>
 </form>
-
 
 {% endblock %}

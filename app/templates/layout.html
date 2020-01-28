@@ -1,6 +1,6 @@
 <!-- Tsun Ting (James) Wong - tw2686
 COMS 4170: User Interface Design
-Homework 11 -->
+Homework 12 -->
 
 <!-- <!DOCTYPE html> -->
 <html>
@@ -12,6 +12,7 @@ Homework 11 -->
   {% block script %}{% endblock %}
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
 
   <!-- bootstrap same as before -->
   <link rel="stylesheet"
@@ -19,29 +20,16 @@ Homework 11 -->
 
   <!-- jQuery Code -->
   <script>
-    {% block brands %}{% endblock %}
+    {% block videos %}{% endblock %}
   </script>
 
   <!-- CSS -->
   <style>
-    .nameStyleS{
-      font-size: x-large;
+    #logo{
+      width: 50;
+      transform: rotate(90deg);
     }
-    .urlStyleS{
-      color: green;
-    }
-    .indusStyleS{
-      opacity: 0.7;
-    }
-    .boldish{
-      font-weight: 500;
-    }
-    .small{
-      font-size: small;
-    }
-    img{
-      width: 80%;
-    }
+    {% block css %}{% endblock %}
   </style>
 
 </head>
@@ -50,8 +38,10 @@ Homework 11 -->
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Learn Guitar Songs</a>
+    <a class="navbar-brand" href="/">
 
+      <img src="{{url_for('static', filename='images/logo.png')}}" id="logo" alt="Logo">
+    </a>
     <!-- Collapsed Navbar Icon was not expanding -->
 
     <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,9 +52,10 @@ Homework 11 -->
   <div id="navbarNavAltMarkup">
     <ul class="nav navbar-nav">
       <li class="active"><a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
+      <li><a class="nav-item nav-link" href="/search">Explore</a></li>
       <li><a class="nav-item nav-link" href="/practice">Practice</a></li>
       <li><a class="nav-item nav-link" href="/add_item">Add Video</a></li>
-      <li><a class="nav-item nav-link" href="/search">Search</a></li>
+      <li><a class="nav-item nav-link" href="/progress">Progress</a></li>
     </ul>
   </div>
   <!-- </div> -->
@@ -73,9 +64,8 @@ Homework 11 -->
 <div class="container">
   <br>
   {% block heading %}{% endblock %}
-  <br>
   {% block content %}
-  <div>{% block item %}{% endblock %}</div>
+
   {% endblock %}
 </div>
 {% block script2 %}{% endblock %}
